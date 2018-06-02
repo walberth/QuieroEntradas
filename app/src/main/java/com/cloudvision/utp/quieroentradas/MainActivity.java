@@ -1,5 +1,6 @@
 package com.cloudvision.utp.quieroentradas;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -20,8 +21,9 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText inputEmail, inputPassword;
     private ProgressBar progressBar;
-    private Button btnSignIn;
+    private Button btnSignIn, btnSignUp;
     private FirebaseAuth auth;
+
     private FirebaseAuth.AuthStateListener autstates;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,17 @@ public class MainActivity extends AppCompatActivity {
         inputEmail= (EditText) findViewById(R.id.email);
         inputPassword= (EditText) findViewById(R.id.password);
         progressBar= (ProgressBar) findViewById(R.id.progressBar);
+        btnSignUp= (Button) findViewById(R.id.register);
+
+
+        btnSignUp.setOnClickListener(new  View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, retorno.class);
+                startActivity(intent);
+            }
+        });
 
      btnSignIn.setOnClickListener(new View.OnClickListener() {
         @Override
@@ -65,9 +78,9 @@ public class MainActivity extends AppCompatActivity {
                             if (!task.isSuccessful()) {
                                 // there was an error
                                 if (password.length() < 6) {
-                                    inputPassword.setError("error àss");
+                                    inputPassword.setError("contraseña incorrecta");
                                 } else {
-                                    Toast.makeText(MainActivity.this, "error tiempo" , Toast.LENGTH_LONG).show();
+                                    Toast.makeText(MainActivity.this, "paràmetros incorrectos" , Toast.LENGTH_LONG).show();
                                 }
                             } else {
                                 Intent intent = new Intent(MainActivity.this, retorno.class);
@@ -82,4 +95,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 }
+    public  void  goCreateAccount(View vi){
+        Intent intentRe = new Intent(this,Map .class);
+        startActivity(intentRe);
+    }
 }
