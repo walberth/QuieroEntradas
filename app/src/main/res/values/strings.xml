@@ -7,4 +7,5 @@
     <string name="hint_email">Correo Electrónico</string>
     <string name="btn_login">LOGIN</string>
     <string name="btn_link_to_login">Ya estoy registrado. Quiero ingresar!</string>
+    <string name="btnEventDetail">Ver Detalle</string>
 </resources>

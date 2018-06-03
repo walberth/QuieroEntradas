@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText inputEmail, inputPassword;
     private ProgressBar progressBar;
-    private Button btnSignIn, btnSignUp;
     private FirebaseAuth auth;
     ImageView imageView;
 
@@ -34,8 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
-        btnSignIn = (Button) findViewById(R.id.button_login);
-        btnSignUp  = (Button) findViewById(R.id.btn_signup);
+        Button btnSignIn = (Button) findViewById(R.id.button_login);
+        Button btnSignUp = (Button) findViewById(R.id.btn_signup);
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -84,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                                         Toast.makeText(MainActivity.this, "paràmetros incorrectos", Toast.LENGTH_LONG).show();
                                     }
                                 } else {
-                                    Intent intent = new Intent(MainActivity.this, CommentsActivity.class);
+                                    Intent intent = new Intent(MainActivity.this, FirstViewActivity.class);
                                     startActivity(intent);
                                     finish();
                                 }
@@ -93,7 +92,5 @@ public class MainActivity extends AppCompatActivity {
                         });
             }
         });
-
-
     }
 }
