@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private Button btnSignIn, btnSignUp;
     private FirebaseAuth auth;
+    ImageView imageView;
 
     private FirebaseAuth.AuthStateListener autstates;
     @Override
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         inputPassword= (EditText) findViewById(R.id.password);
         progressBar= (ProgressBar) findViewById(R.id.progressBar);
         btnSignUp= (Button) findViewById(R.id.register);
-
+        imageView= (ImageView) findViewById(R.id.imageView);
 
         btnSignUp.setOnClickListener(new  View.OnClickListener(){
 

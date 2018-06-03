@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
+    android:background="#5A6978"
     tools:context=".MainActivity">
 
 
@@ -14,12 +14,18 @@
             android:orientation="vertical"
             >
 
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="193dp"
+                android:background="#fff"
+                app:srcCompat="@drawable/descarga" />
 
             <EditText
                     android:id="@+id/email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="email"
+                    android:hint="Correo Electrònico"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
                     android:singleLine="true"
@@ -35,7 +41,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:focusableInTouchMode="true"
-                    android:hint="hint_password"
+                    android:hint="Contraseña"
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
                     android:maxLines="1"
@@ -48,20 +54,22 @@
                 android:id="@+id/button_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:background="#2898CA"
+                android:text="Iniciar SESION" />
 
             <Button
                 android:id="@+id/register"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Register"
+                android:background="#DE3434"
+                android:text="Cancelar"
                 />
             <TextView
                 android:id="@+id/createHere"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Crea una cuenta"
-                android:textColor="@color/azul"
+                android:text="Crear una cuenta"
+                android:textColor="#303F9F"
                 android:textStyle="bold"
                 android:textSize="20dp"
                 android:layout_toRightOf="@+id/dontHaveAccount"
