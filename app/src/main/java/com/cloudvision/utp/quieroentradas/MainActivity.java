@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                                         Toast.makeText(MainActivity.this, "paràmetros incorrectos", Toast.LENGTH_LONG).show();
                                     }
                                 } else {
-                                    Intent intent = new Intent(MainActivity.this, retorno.class);
+                                    Intent intent = new Intent(MainActivity.this, CommentsActivity.class);
                                     startActivity(intent);
                                     finish();
                                 }
