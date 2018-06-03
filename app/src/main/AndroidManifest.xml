@@ -43,6 +43,7 @@
         </activity>
         <activity android:name=".RegisterActivity" />
         <activity android:name=".CommentsActivity" />
+        <activity android:name=".FirstViewActivity" />
     </application>
 
 </manifest>
