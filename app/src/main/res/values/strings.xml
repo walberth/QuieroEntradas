@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">QuieroEntradas</string>
     <string name="title_activity_map">Map</string>
+    <string name="email">Correo Electrónico</string>
+    <string name="hint_password">Contraseña</string>
+    <string name="action_sign_in_short">REGISTRARSE</string>
+    <string name="hint_email">Correo Electrónico</string>
+    <string name="btn_login">LOGIN</string>
+    <string name="btn_link_to_login">Ya estoy registrado. Quiero ingresar!</string>
 </resources>
