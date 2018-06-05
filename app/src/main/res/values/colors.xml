@@ -4,4 +4,13 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="gris">#5A6978</color>
+    <color name="input_register">#222222</color>
+    <color name="btn_login_register">#2196F3</color>
+    <color name="white">#ffffff</color>
+    <color name="input_login">#222222</color>
+    <color name="input_login_hint">#999999</color>
+    <color name="btn_register">#0D47A1</color>
+    <color name="backgroundEventsCardView">#DDE8ED</color>
+    <color name="colorTextPrimary">#212121</color>
+    <color name="colorCameraFab">#FF262EA1</color>
 </resources>
