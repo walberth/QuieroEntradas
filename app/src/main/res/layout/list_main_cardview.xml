@@ -7,7 +7,17 @@
     android:id="@+id/listEventCards"
     tools:context=".FirstViewActivity">
 
-    <LinearLayout
+    <Button
+        android:id="@+id/btnLogout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:text="Cierra Sesión"
+        android:textAllCaps="false"
+        android:textColor="@color/colorStatusBar"
+        android:textSize="16sp"/>
+
+    <!--<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -16,7 +26,7 @@
         android:paddingRight="10dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <!--include layout="@layout/cardview_pending_response" /-->
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/listEventsRecycler"
             android:layout_width="match_parent"
@@ -37,6 +47,6 @@
         android:src="@android:drawable/ic_menu_camera"
         android:tint="@android:color/white"
         app:backgroundTint="@color/colorCameraFab"
-        app:fabSize="normal" />
+        app:fabSize="normal" />-->
 
 </RelativeLayout>
