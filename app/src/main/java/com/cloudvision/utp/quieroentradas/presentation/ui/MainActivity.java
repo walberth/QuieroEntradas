@@ -15,8 +15,11 @@ import android.view.MenuItem;
 import android.widget.Toast;
 import com.cloudvision.utp.quieroentradas.R;
 import com.cloudvision.utp.quieroentradas.presentation.ui.fragment.LastSearchFragment;
+import com.cloudvision.utp.quieroentradas.presentation.ui.fragment.SearchFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG  = "MainActivity";
@@ -50,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
 
         Bundle data = new Bundle();
-        data.putString("userCode", user.getEmail().substring(0,7));
+        data.putString("userCode", Objects.requireNonNull(user.getEmail()).substring(0,7));
 
         //TODO
         lastSearchFragment = new LastSearchFragment();
@@ -74,10 +77,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
         switch (id) {
             case R.id.nitMySearching:
-                Toast.makeText(getApplicationContext(), "my searching", Toast.LENGTH_LONG).show();
+                LastSearchFragment lastSearchFragment = new LastSearchFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content, lastSearchFragment)
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                        .addToBackStack(null).commit();
                 break;
             case R.id.nitSearch:
-                Toast.makeText(getApplicationContext(), "search", Toast.LENGTH_LONG).show();
+                SearchFragment searchFragment = new SearchFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content, searchFragment)
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                        .addToBackStack(null).commit();
                 break;
             case R.id.nitRanking:
                 Toast.makeText(getApplicationContext(), "ranking", Toast.LENGTH_LONG).show();

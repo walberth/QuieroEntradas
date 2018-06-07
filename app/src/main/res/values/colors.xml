@@ -25,4 +25,5 @@
     <color name="colorLead3">#a6a6a6</color>
     <color name="colorLead4">#666666</color>
     <color name="colorBlack">#1a1a1a</color>
+    <color name="colorLastSearchbackground">#D8D3D3</color>
 </resources>
