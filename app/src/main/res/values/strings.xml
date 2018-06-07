@@ -2,10 +2,34 @@
     <string name="app_name">QuieroEntradas</string>
     <string name="title_activity_map">Map</string>
     <string name="email">Correo Electrónico</string>
+    <string name="user">Usuario</string>
     <string name="hint_password">Contraseña</string>
     <string name="action_sign_in_short">REGISTRARSE</string>
     <string name="hint_email">Correo Electrónico</string>
     <string name="btn_login">LOGIN</string>
     <string name="btn_link_to_login">Ya estoy registrado. Quiero ingresar!</string>
     <string name="btnEventDetail">Ver Detalle</string>
+    <string name="name">Nombre</string>
+    <string name="lastName">Apellidos</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="login_button">Iniciar Sesión</string>
+    <string name="signup_button">¿No tienes una cuenta? Registrate</string>
+    <string name="login_logo">Quiero Entradas Logo</string>
+    <string name="inputEmailError">Ingrese correo electrónico</string>
+    <string name="inputPasswordError">Ingrese contraseña</string>
+    <string name="inputPasswordLengthError">Contraseña debe tener más de 6 caracteres.</string>
+    <string name="wrongEmailError">Correo electrónico inválido.</string>
+    <string name="wrongPasswordError">Contraseña inválido.</string>
+    <string name="unkwownError">Error desconocido.</string>
+    <string name="navDrawerUser">Imagen usuario general.</string>
+    <string name="nav_item_mysearching">Mis Búsquedas</string>
+    <string name="nav_item_search">Buscar</string>
+    <string name="nav_item_ranking">Ranking</string>
+    <string name="open_drawer">Open navigation drawer</string>
+    <string name="close_drawer">Close navigation drawer</string>
+    <string name="nav_item_logout">Cerrar Sesión</string>
+    <string name="title_activity_main2">Main2Activity</string>
 </resources>
