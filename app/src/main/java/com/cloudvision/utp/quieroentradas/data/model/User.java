@@ -1,32 +1,20 @@
 package com.cloudvision.utp.quieroentradas.data.model;
 
-import java.util.Date;
-
 public class User {
-    private String uid;
     private String idLogin;
     private String name;
     private String lastName;
     private String email;
+    private long userCreatedTime;
 
     public User() {
     }
 
-    public User(String uid, String idLogin, String name, String lastName, String email) {
-        this.uid = uid;
-        this.uid = idLogin;
+    public User(String idLogin, String name, String lastName, String email, long userCreatedTime) {
         this.name = name;
         this.lastName = lastName;
         this.email = email;
-        long userCreatedTime = new Date().getTime();
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
+        this.userCreatedTime = userCreatedTime;
     }
 
     public String getIdLogin() {
@@ -59,5 +47,13 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public long getUserCreatedTime() {
+        return userCreatedTime;
+    }
+
+    public void setUserCreatedTime(long userCreatedTime) {
+        this.userCreatedTime = userCreatedTime;
     }
 }

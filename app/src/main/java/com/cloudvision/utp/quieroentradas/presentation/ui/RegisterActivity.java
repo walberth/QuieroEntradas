@@ -21,10 +21,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import java.util.Date;
+import java.util.Objects;
+
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
 
-    private EditText inputEmail, inputPassword;
+    private EditText inputEmail, inputPassword, name, lastName;
+    private Button btnSignUp, btnSignIn;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
     private FirebaseUser user;
@@ -36,11 +40,13 @@ public class RegisterActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
-        Button btnSignUp = findViewById(R.id.sign_up_button);
-        Button btnSignIn = findViewById(R.id.sign_in);
-        inputEmail = findViewById(R.id.email);
-        inputPassword = findViewById(R.id.password);
+        btnSignUp = findViewById(R.id.sign_up_button);
+        btnSignIn = findViewById(R.id.sign_in);
+        inputEmail = findViewById(R.id.registerEmail);
+        inputPassword = findViewById(R.id.registerPassword);
         progressBar = findViewById(R.id.progressBar);
+        name = findViewById(R.id.registerName);
+        lastName = findViewById(R.id.registerLastName);
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,28 +92,37 @@ public class RegisterActivity extends AppCompatActivity {
                                 } else {
                                     //TODO: SAVE EXTRA INFORMATION TO THE DATABASE
                                     user = FirebaseAuth.getInstance().getCurrentUser();
-                                    Query query = FirebaseDatabase.getInstance().getReference().child("users").orderByChild("email").equalTo(user.getEmail());
 
-                                    String idLogin = user.getUid();
-                                    EditText name = findViewById(R.id.registerName);
-                                    EditText lastName = findViewById(R.id.registerLastName);
+                                    //Query query = FirebaseDatabase.getInstance().getReference().child("users").orderByChild("email").equalTo(user.getEmail());
+                                    //String idLogin = user.getUid();
+
+                                    assert user != null;
 
                                     Log.d(TAG, "onComplete: idLogin " + user.getUid());
                                     Log.d(TAG, "onComplete: name " + name.getText().toString());
                                     Log.d(TAG, "onComplete: lastName " + lastName.getText().toString());
+                                    Log.d(TAG, "onComplete: email " + user.getEmail());
 
-                                    FirebaseDatabase.getInstance()
-                                            .getReference()
-                                            .child("users")
-                                            .push()
-                                            .setValue(new User("2",
-                                                    user.getUid(),
-                                                    name.getText().toString(),
-                                                    lastName.getText().toString(),
-                                                    user.getEmail())
-                                            );
+                                    String firsLetter = name.getText().toString().substring(0, 1);
+                                    String[] firstLastName = lastName.getText().toString().split(" ");
 
-                                    finish();
+                                    String username = firsLetter +firstLastName[0];
+
+                                    User firebaseUser = new User();
+                                    firebaseUser.setEmail(user.getEmail());
+                                    firebaseUser.setName(name.getText().toString());
+                                    firebaseUser.setLastName(lastName.getText().toString());
+                                    firebaseUser.setIdLogin(user.getUid());
+                                    firebaseUser.setUserCreatedTime(new Date().getTime());
+
+                                    if(user.getEmail() != null) {
+                                        FirebaseDatabase.getInstance()
+                                                .getReference()
+                                                .child("user")
+                                                .child(username)
+                                                .setValue(firebaseUser);
+                                        finish();
+                                    }
                                 }
                             }
                         });

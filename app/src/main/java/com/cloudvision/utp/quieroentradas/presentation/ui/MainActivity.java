@@ -37,16 +37,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         user = FirebaseAuth.getInstance().getCurrentUser();
 
         toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_drawer, R.string.close_drawer);
 
-        navigationView.setNavigationItemSelectedListener(this);
         drawerLayout.setDrawerListener(toggle);
 
         toggle.syncState();
-        setSupportActionBar(toolbar);
 
         Bundle data = new Bundle();
         data.putString("userCode", user.getEmail().substring(0,7));
