@@ -30,7 +30,7 @@ import com.google.firebase.database.Query;
  */
 public class CommentFragment extends Fragment {
 
-    private static final String TAG = "CommentsActivity";
+    private static final String TAG = "CommentFragment";
 
     private static final int SIGN_IN_REQUEST_CODE = 1;
     private FirebaseListAdapter<CommentPlace> adapter;
@@ -87,7 +87,9 @@ public class CommentFragment extends Fragment {
             Log.d(TAG, "onCreate: zzn " + user.zzn());
             Log.d(TAG, "onCreate: " + user);
 
-            ListView listOfMessages = view.findViewById(R.id.list_of_messages);
+            //TODO: CHANGE LISTVIEW FOR RECYCLERVIEW
+            /*START: displayChatMessages*/
+            //ListView listOfMessages = view.findViewById(R.id.list_of_messages);
 
             Query query = FirebaseDatabase.getInstance().getReference().child("chats");
 
@@ -113,14 +115,14 @@ public class CommentFragment extends Fragment {
                 }
             };
 
-            listOfMessages.setAdapter(adapter);
+            //listOfMessages.setAdapter(adapter);
         }
 
         FloatingActionButton fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditText input = view.findViewById(R.id.input);
+                //EditText input = view.findViewById(R.id.input);
 
                 // Read the input field and push a new instance
                 // of CommentPlace to the Firebase database
@@ -135,7 +137,7 @@ public class CommentFragment extends Fragment {
                         );*//*
 
                 // Clear the input*/
-                input.setText("");
+                //input.setText("");
             }
         });
     }

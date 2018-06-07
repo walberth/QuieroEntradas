@@ -53,7 +53,6 @@
         <activity android:name=".presentation.ui.RegisterActivity" />
 
         <!--TO CHANGE LATER-->
-        <activity android:name=".presentation.ui.fragment.CommentsActivity" />
         <!--/***************************************************************/-->
 
         <activity android:name=".presentation.ui.MainActivity" android:theme="@style/AppThemeOfficial.NoActionBar"/>
