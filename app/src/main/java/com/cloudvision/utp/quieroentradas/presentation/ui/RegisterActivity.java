@@ -1,26 +1,33 @@
-package com.cloudvision.utp.quieroentradas;
+package com.cloudvision.utp.quieroentradas.presentation.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.cloudvision.utp.quieroentradas.R;
+import com.cloudvision.utp.quieroentradas.data.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 public class RegisterActivity extends AppCompatActivity {
+    private static final String TAG = "RegisterActivity";
+
     private EditText inputEmail, inputPassword;
-    private Button btnSignUp, btnSignIn;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
+    private FirebaseUser user;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,11 +36,11 @@ public class RegisterActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
-        btnSignUp = (Button) findViewById(R.id.sign_up_button);
-        inputEmail = (EditText) findViewById(R.id.email);
-        inputPassword = (EditText) findViewById(R.id.password);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        btnSignIn = (Button) findViewById(R.id.sign_in);
+        Button btnSignUp = findViewById(R.id.sign_up_button);
+        Button btnSignIn = findViewById(R.id.sign_in);
+        inputEmail = findViewById(R.id.email);
+        inputPassword = findViewById(R.id.password);
+        progressBar = findViewById(R.id.progressBar);
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,10 +82,31 @@ public class RegisterActivity extends AppCompatActivity {
                                 progressBar.setVisibility(View.GONE);
 
                                 if (!task.isSuccessful()) {
-                                    Toast.makeText(RegisterActivity.this, "Authentication failed." + task.getException(),
-                                            Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(RegisterActivity.this, "Authentication failed." + task.getException(), Toast.LENGTH_SHORT).show();
                                 } else {
-                                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                                    //TODO: SAVE EXTRA INFORMATION TO THE DATABASE
+                                    user = FirebaseAuth.getInstance().getCurrentUser();
+                                    Query query = FirebaseDatabase.getInstance().getReference().child("users").orderByChild("email").equalTo(user.getEmail());
+
+                                    String idLogin = user.getUid();
+                                    EditText name = findViewById(R.id.registerName);
+                                    EditText lastName = findViewById(R.id.registerLastName);
+
+                                    Log.d(TAG, "onComplete: idLogin " + user.getUid());
+                                    Log.d(TAG, "onComplete: name " + name.getText().toString());
+                                    Log.d(TAG, "onComplete: lastName " + lastName.getText().toString());
+
+                                    FirebaseDatabase.getInstance()
+                                            .getReference()
+                                            .child("users")
+                                            .push()
+                                            .setValue(new User("2",
+                                                    user.getUid(),
+                                                    name.getText().toString(),
+                                                    lastName.getText().toString(),
+                                                    user.getEmail())
+                                            );
+
                                     finish();
                                 }
                             }
