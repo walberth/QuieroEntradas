@@ -32,4 +32,14 @@
     <string name="close_drawer">Close navigation drawer</string>
     <string name="nav_item_logout">Cerrar Sesión</string>
     <string name="title_activity_main2">Main2Activity</string>
+
+    <!-- Strings for search detail -->
+    <string name="txtEvntName">VIVO POR EL ROCK XX</string>
+    <string name="txtEvntPlace">Av. Mariam Quimper 897</string>
+    <string name="txtEventDetail">Evento en el cual se presentan muchos grupos de rock nacional e internacional</string>
+    <string name="btnEventLocation">VER LOCACIONES</string>
+
+    <!-- Strings for search detail -->
+    <string name="btnSendImage">ENVIAR</string>
+    <string name="btnCancelImage">CANCELAR</string>
 </resources>
