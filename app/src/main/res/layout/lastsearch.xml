@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:background="@color/colorLastSearchbackground"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/eventImage"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:background="#fff"
+        app:srcCompat="@drawable/descarga"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
+
+    <TextView
+        android:id="@+id/eventName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/eventImage"
+        android:text="CONCIERTO TODOS JUNTOS CON TU PRIMA"
+        android:textSize="15dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/eventDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/eventName"
+        android:text="14/02/2018"/>
+
+    <Button
+        android:id="@+id/btnEventDetail"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorLastSearchbackground"
+        android:text="@string/btnEventDetail"
+        android:layout_below="@id/eventDate"
+        android:textColor="@color/colorBlack" />
+
+</RelativeLayout>

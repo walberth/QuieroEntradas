@@ -1,15 +1,22 @@
-package com.cloudvision.utp.quieroentradas;
+package com.cloudvision.utp.quieroentradas.presentation.ui.fragment;
+
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.cloudvision.utp.quieroentradas.R;
+import com.cloudvision.utp.quieroentradas.presentation.adapter.SearchAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -20,31 +27,44 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class searchevent extends AppCompatActivity {
-    EditText search_edit_text;
-    RecyclerView recyclerView;
-    DatabaseReference databaseReference;
-    FirebaseUser firebaseEvent;
-    ArrayList<String> descriptionlist;
-    ArrayList<String> imagelist;
-    ArrayList<String> namelist;
-    ArrayList<String> statuslist;
-    SearchAdapter searchAdapter;
+/**
+ * Created by Ronald Estela on 07,June,2018
+ */
+public class SearchFragment extends Fragment {
+    private EditText search_edit_text;
+    private RecyclerView recyclerView;
+    private DatabaseReference databaseReference;
+    private FirebaseUser firebaseEvent;
+    private ArrayList<String> descriptionlist;
+    private ArrayList<String> imagelist;
+    private ArrayList<String> namelist;
+    private ArrayList<String> statuslist;
+    private SearchAdapter searchAdapter;
+
+    public SearchFragment() {
+        // Required empty public constructor
+    }
+
+
     @Override
-    protected  void  onCreate(Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_search, container, false);
+    }
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.search);
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        search_edit_text=(EditText) findViewById(R.id.searchedit);
-        recyclerView= (RecyclerView) findViewById(R.id.list);
+        search_edit_text= view.findViewById(R.id.searchedit);
+        recyclerView=  view.findViewById(R.id.list);
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
         firebaseEvent = FirebaseAuth.getInstance().getCurrentUser();
 
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
 
         descriptionlist = new ArrayList<>();
         imagelist = new ArrayList<>();
@@ -81,7 +101,7 @@ public class searchevent extends AppCompatActivity {
         databaseReference.child("events").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-               // se limpia la vista cada vez que se realiza una busqueda
+                // se limpia la vista cada vez que se realiza una busqueda
 
                 descriptionlist.clear();
                 imagelist.clear();
@@ -115,7 +135,7 @@ public class searchevent extends AppCompatActivity {
                         break;
                 }
 
-                searchAdapter = new SearchAdapter(searchevent.this, descriptionlist, imagelist, namelist, statuslist);
+                searchAdapter = new SearchAdapter(getContext(), descriptionlist, imagelist, namelist, statuslist);
                 recyclerView.setAdapter(searchAdapter);
             }
 
