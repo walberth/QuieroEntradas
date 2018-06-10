@@ -6,19 +6,27 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
+        android:name=".helper.ui.Splash"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:icon="@drawable/quieroentradas_logo"
+        android:label="@string/label_name"
+        android:roundIcon="@drawable/quieroentradas_logo"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        android:theme="@style/AppThemeOfficial">
+        <activity
+            android:name=".SplashActivity"
+            android:theme="@style/SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".LoginActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeOfficial.ActionBar"></activity>
         <activity android:name=".retorno" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -44,6 +52,7 @@
         <activity android:name=".RegisterActivity" />
         <activity android:name=".CommentsActivity" />
         <activity android:name=".FirstViewActivity" />
+        <activity android:name=".MainActivity" android:theme="@style/AppThemeOfficial.NoActionBar"></activity>
     </application>
 
 </manifest>

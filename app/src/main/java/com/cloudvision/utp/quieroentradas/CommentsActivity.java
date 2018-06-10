@@ -121,7 +121,7 @@ public class CommentsActivity extends AppCompatActivity {
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            Toast.makeText(MainActivity.this,
+                            Toast.makeText(LoginActivity.this,
                                     "You have been signed out.",
                                     Toast.LENGTH_LONG)
                                     .show();
