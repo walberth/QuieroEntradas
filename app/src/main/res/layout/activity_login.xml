@@ -7,7 +7,7 @@
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
     android:background="@color/colorLead"
-    tools:context=".LoginActivity">
+    tools:context=".presentation.ui.LoginActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
