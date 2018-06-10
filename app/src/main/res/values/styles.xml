@@ -1,5 +1,4 @@
 <resources>
-
     <!-- Official Style for App theme -->
     <style name="AppThemeOfficial" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:colorPrimary">@color/colorPrimary</item>
@@ -57,6 +56,6 @@
     </style>
 
     <style name="NavigationView">
-        <item name="android:textColorSecondary">@color/white</item>
+        <item name="android:textColorSecondary">@color/colorTextPrimary</item>
     </style>
 </resources>

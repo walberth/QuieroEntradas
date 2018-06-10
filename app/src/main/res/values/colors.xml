@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#03A9F4</color>
+    <color name="colorPrimaryDark">#0288D1</color>
+    <color name="colorPrimaryLight">#B3E5FC</color>
+    <color name="colorAccent">#FF5722</color>
     <color name="gris">#5A6978</color>
     <color name="input_register">#222222</color>
     <color name="btn_login_register">#2196F3</color>
@@ -12,10 +13,12 @@
     <color name="btn_register">#0D47A1</color>
     <color name="backgroundEventsCardView">#DDE8ED</color>
     <color name="colorTextPrimary">#212121</color>
-    <color name="colorCameraFab">#FF262EA1</color>
+
     <color name="colorTextSecondary">#404040</color>
     <color name="colorIcons">#FFFFFF</color>
     <color name="colorDivider">#757575</color>
+    <color name="colorCameraFab">#FF262EA1</color>
+
     <color name="colorStatusBar">@color/colorPrimary</color>
     <color name="colorWhite">#D8D3D3</color>
     <color name="colorWhite2">#FFFDFD</color>
@@ -25,5 +28,6 @@
     <color name="colorLead3">#a6a6a6</color>
     <color name="colorLead4">#666666</color>
     <color name="colorBlack">#1a1a1a</color>
+
     <color name="colorLastSearchbackground">#D8D3D3</color>
 </resources>
