@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
-        android:name=".helper.ui.Splash"
+        android:name=".presentation.ui.helpers.Splash"
         android:allowBackup="true"
         android:icon="@drawable/quieroentradas_logo"
         android:label="@string/label_name"
@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppThemeOfficial">
         <activity
-            android:name=".SplashActivity"
+            android:name=".presentation.ui.SplashActivity"
             android:theme="@style/SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,12 +22,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".LoginActivity"
+            android:name=".presentation.ui.LoginActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
-            android:theme="@style/AppThemeOfficial.ActionBar"></activity>
-        <activity android:name=".retorno" />
+            android:theme="@style/AppThemeOfficial.ActionBar"/>
+
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -41,7 +42,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".Map"
+            android:name=".presentation.ui.fragment.MapFragment"
             android:label="@string/title_activity_map">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -49,10 +50,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity" />
+        <activity android:name=".presentation.ui.RegisterActivity" />
         <activity android:name=".CommentsActivity" />
         <activity android:name=".FirstViewActivity" />
-        <activity android:name=".MainActivity" android:theme="@style/AppThemeOfficial.NoActionBar"></activity>
+        <activity android:name=".presentation.ui.MainActivity" android:theme="@style/AppThemeOfficial.NoActionBar"/>
     </application>
 
 </manifest>
