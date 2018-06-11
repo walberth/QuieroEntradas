@@ -1,21 +1,19 @@
 <resources>
     <string name="app_name">QuieroEntradas</string>
+    <string name="label_name">Quiero Entradas</string>
     <string name="title_activity_map">Map</string>
     <string name="email">Correo Electrónico</string>
     <string name="user">Usuario</string>
     <string name="hint_password">Contraseña</string>
     <string name="action_sign_in_short">REGISTRARSE</string>
     <string name="hint_email">Correo Electrónico</string>
-    <string name="btn_login">LOGIN</string>
+    <string name="login_button">Iniciar Sesión</string>
     <string name="btn_link_to_login">Ya estoy registrado. Quiero ingresar!</string>
     <string name="btnEventDetail">Ver Detalle</string>
+
     <string name="name">Nombre</string>
     <string name="lastName">Apellidos</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
-    <string name="login_button">Iniciar Sesión</string>
     <string name="signup_button">¿No tienes una cuenta? Registrate</string>
     <string name="login_logo">Quiero Entradas Logo</string>
     <string name="inputEmailError">Ingrese correo electrónico</string>
@@ -23,6 +21,8 @@
     <string name="inputPasswordLengthError">Contraseña debe tener más de 6 caracteres.</string>
     <string name="wrongEmailError">Correo electrónico inválido.</string>
     <string name="wrongPasswordError">Contraseña inválido.</string>
+    <string name="inputNameError">Ingrese nombre.</string>
+    <string name="inputLastnameError">Ingrese apellidos.</string>
     <string name="unkwownError">Error desconocido.</string>
     <string name="navDrawerUser">Imagen usuario general.</string>
     <string name="nav_item_mysearching">Mis Búsquedas</string>
@@ -31,6 +31,21 @@
     <string name="open_drawer">Open navigation drawer</string>
     <string name="close_drawer">Close navigation drawer</string>
     <string name="nav_item_logout">Cerrar Sesión</string>
+    <string name="nit_logout">Cerrar Sesión</string>
+    <string name="nit_configuration">Configuración</string>
+    <string name="nit_profile">Mi Perfil</string>
+    <string name="dialog_title_error">¡Error!</string>
+    <string name="dialog_ok_button">Aceptar</string>
+    <string name="dialog_error_register_message">Error en creación de su cuenta de usuario.</string>
+    <string name="dialog_error_rb_sex_message">Seleccione un sexo del formulario.</string>
+    <string name="dialog_register_title_success">Usuario Registrado</string>
+    <string name="dialog_register_message_success">Se completó el registro satisfactoriamente.</string>
+    <string name="dialog_login_button">Ir a inicio de Sesión</string>
+    <string name="inputEmailExistError">Correo electrónico existente.</string>
+    <string name="hideKeyboardViewError">Teclado no está visible.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_main2">Main2Activity</string>
 
     <!-- Strings for search detail -->
@@ -42,4 +57,9 @@
     <!-- Strings for search detail -->
     <string name="btnSendImage">ENVIAR</string>
     <string name="btnCancelImage">CANCELAR</string>
+    <string name="toolbar_Register_Title">Registro de Usuario</string>
+    <string name="register_button">Registrar</string>
+    <string name="register_rb_sex">Sexo</string>
+    <string name="register_rb_sex_male">Masculino</string>
+    <string name="register_rb_sex_female">Femenino</string>
 </resources>
