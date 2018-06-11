@@ -6,15 +6,23 @@ public class User {
     private String lastName;
     private String email;
     private long userCreatedTime;
+    private String username;
+    private String sexName;
+    private String sexUri;
 
     public User() {
     }
 
-    public User(String idLogin, String name, String lastName, String email, long userCreatedTime) {
+    public User(String idLogin, String name, String lastName, String email, long userCreatedTime, String username,
+                String sexName, String sexUri) {
+        this.idLogin = idLogin;
         this.name = name;
         this.lastName = lastName;
         this.email = email;
         this.userCreatedTime = userCreatedTime;
+        this.username = username;
+        this.sexName = sexName;
+        this.sexUri = sexUri;
     }
 
     public String getIdLogin() {
@@ -55,5 +63,29 @@ public class User {
 
     public void setUserCreatedTime(long userCreatedTime) {
         this.userCreatedTime = userCreatedTime;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getSexName() {
+        return sexName;
+    }
+
+    public void setSexName(String sexName) {
+        this.sexName = sexName;
+    }
+
+    public String getSexUri() {
+        return sexUri;
+    }
+
+    public void setSexUri(String sexUri) {
+        this.sexUri = sexUri;
     }
 }

@@ -14,7 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.cloudvision.utp.quieroentradas.data.model.ChatMessage;
+//import com.cloudvision.utp.quieroentradas.data.model.ChatMessage;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseListOptions;
@@ -25,21 +25,21 @@ import com.google.firebase.database.Query;
 public class CommentsActivity extends AppCompatActivity {
 
     private static final int SIGN_IN_REQUEST_CODE = 1;
-    private FirebaseListAdapter<ChatMessage> adapter;
+    //private FirebaseListAdapter<ChatMessage> adapter;
 
     @Override
     protected void onStart() {
         super.onStart();
-        adapter.startListening();
+        //adapter.startListening();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        adapter.stopListening();
+        //adapter.stopListening();
     }
 
-    @Override
+    /*@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comments);
@@ -85,9 +85,9 @@ public class CommentsActivity extends AppCompatActivity {
                 input.setText("");
             }
         });
-    }
+    }*/
 
-    @Override
+    /*@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == SIGN_IN_REQUEST_CODE) {
@@ -106,7 +106,7 @@ public class CommentsActivity extends AppCompatActivity {
                 finish();
             }
         }
-    }
+    }*/
 
     /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -134,7 +134,7 @@ public class CommentsActivity extends AppCompatActivity {
         return true;
     }*/
 
-    private void displayChatMessages() {
+    /*private void displayChatMessages() {
         ListView listOfMessages = (ListView)findViewById(R.id.list_of_messages);
 
         Query query = FirebaseDatabase.getInstance().getReference().child("chats");
@@ -162,5 +162,5 @@ public class CommentsActivity extends AppCompatActivity {
         };
 
         listOfMessages.setAdapter(adapter);
-    }
+    }*/
 }

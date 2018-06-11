@@ -9,6 +9,7 @@
     android:background="@drawable/navigation_drawer_header">
 
     <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/niv_header_photo"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:src="@drawable/avatar_main_user"
@@ -16,16 +17,18 @@
         android:contentDescription="@string/navDrawerUser" />
 
     <TextView
+        android:id="@+id/niv_header_fullname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Gustavo Ramos"
+        android:text="Test"
         android:paddingTop="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
+        android:id="@+id/niv_header_email"
         android:layout_width="wrap_content"
+        android:text="Test"
         android:layout_height="wrap_content"
-        android:text="gustavoramosm@gmail.com"
         android:paddingTop="4dp" />
 
 </LinearLayout>

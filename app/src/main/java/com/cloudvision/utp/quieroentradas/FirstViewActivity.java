@@ -16,13 +16,13 @@ public class FirstViewActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_main_cardview);
-        btnLogout = (Button) findViewById(R.id.btnLogout);
+        /*btnLogout = (Button) findViewById(R.id.btnLogout);
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(FirstViewActivity.this, LoginActivity.class));
             }
-        });
+        });*/
     }
 }
