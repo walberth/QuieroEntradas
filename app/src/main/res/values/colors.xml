@@ -30,4 +30,8 @@
     <color name="colorBlack">#1a1a1a</color>
 
     <color name="colorLastSearchbackground">#D8D3D3</color>
+
+    <color name="material_blue_500">#2196F3</color>
+    <color name="material_blue_700">#1976D2</color>
+    <color name="material_blue_a700">#2962FF</color>
 </resources>
