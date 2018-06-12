@@ -48,10 +48,11 @@ public class LoginActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference("user");
         Button btnSignUp = findViewById(R.id.btnSignup);
-        btnLogin = (CircularProgressButton) findViewById(R.id.btnLogin);
+        btnLogin = findViewById(R.id.btnLogin);
         emailWrap = findViewById(R.id.emailWrap);
         passwordWrap = findViewById(R.id.passwordWrap);
         imageView = findViewById(R.id.logo);
+
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,6 +60,7 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
