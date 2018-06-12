@@ -24,6 +24,7 @@ import com.cloudvision.utp.quieroentradas.data.datasource.session.UserSessionMan
 import com.cloudvision.utp.quieroentradas.data.model.User;
 import com.cloudvision.utp.quieroentradas.presentation.ui.fragment.LastSearchFragment;
 import com.cloudvision.utp.quieroentradas.presentation.ui.fragment.SearchFragment;
+import com.cloudvision.utp.quieroentradas.presentation.ui.fragment.StadisticFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -113,7 +114,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .addToBackStack(null).commit();
                 break;
             case R.id.nitRanking:
-                Toast.makeText(getApplicationContext(), "ranking", Toast.LENGTH_LONG).show();
+                StadisticFragment stadisticFragment = new StadisticFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content, stadisticFragment)
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                        .addToBackStack(null).commit();
                 break;
             case R.id.nitProfile:
                 Toast.makeText(getApplicationContext(), "profile", Toast.LENGTH_LONG).show();
