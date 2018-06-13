@@ -39,7 +39,7 @@ public class StadisticFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        getActivity().setTitle(getResources().getString(R.string.nav_item_ranking));
         pieChart = view.findViewById(R.id.pieChart);
         pieChart.setUsePercentValues(true);
         pieChart.getDescription().setEnabled(true);

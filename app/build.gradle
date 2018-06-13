@@ -17,6 +17,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
 }
 
 dependencies {
@@ -50,6 +54,8 @@ dependencies {
     implementation 'com.google.api-client:google-api-client-android:1.23.0' exclude module: 'httpclient'
     implementation 'com.google.http-client:google-http-client-gson:1.23.0' exclude module: 'httpclient'
     implementation 'com.google.apis:google-api-services-vision:v1-rev369-1.23.0'
+    /*Joda Time Reference*/
+    implementation 'net.danlew:android.joda:2.9.9.4'
     /*Android Stadistics Chart*/
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
 }

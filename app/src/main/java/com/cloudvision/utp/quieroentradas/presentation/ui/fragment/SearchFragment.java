@@ -55,7 +55,7 @@ public class SearchFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        getActivity().setTitle(getResources().getString(R.string.nav_item_search));
         search_edit_text= view.findViewById(R.id.searchedit);
         recyclerView=  view.findViewById(R.id.list);
 

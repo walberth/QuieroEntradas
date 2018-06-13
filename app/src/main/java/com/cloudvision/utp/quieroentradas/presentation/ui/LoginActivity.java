@@ -1,10 +1,12 @@
 package com.cloudvision.utp.quieroentradas.presentation.ui;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -101,6 +103,7 @@ public class LoginActivity extends AppCompatActivity {
                                                     @Override
                                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                         if (dataSnapshot.exists()) {
+                                                            emailWrap.setErrorEnabled(false);
                                                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                                                 String email =  snapshot.child("email").getValue(String.class);
                                                                 String idLogin =  snapshot.child("idLogin").getValue(String.class);
@@ -110,7 +113,6 @@ public class LoginActivity extends AppCompatActivity {
                                                                 String sexUri =  snapshot.child("sexUri").getValue(String.class);
                                                                 String username =  snapshot.child("username").getValue(String.class);
                                                                 Long created =  snapshot.child("userCreatedTime").getValue(Long.class);
-                                                                Log.d(TAG, "sex uri " + sexUri);
                                                                 User user = new User(idLogin, name, lastName, email, created, username, sexName, sexUri);
                                                                 new UserSessionManager(getApplicationContext(), user);
                                                                 btnLogin.revertAnimation();
@@ -118,6 +120,10 @@ public class LoginActivity extends AppCompatActivity {
                                                                 startActivity(intent);
                                                                 finish();
                                                             }
+                                                        } else {
+                                                            emailWrap.setErrorEnabled(true);
+                                                            emailWrap.setError(getResources().getString(R.string.inputEmailNotExistError));
+                                                            btnLogin.revertAnimation();
                                                         }
                                                     }
 
