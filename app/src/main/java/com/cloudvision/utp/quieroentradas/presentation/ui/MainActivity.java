@@ -1,6 +1,5 @@
 package com.cloudvision.utp.quieroentradas.presentation.ui;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,12 +11,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.cloudvision.utp.quieroentradas.R;
 import com.cloudvision.utp.quieroentradas.data.datasource.session.UserSessionManager;
@@ -25,11 +21,10 @@ import com.cloudvision.utp.quieroentradas.data.model.User;
 import com.cloudvision.utp.quieroentradas.presentation.ui.fragment.LastSearchFragment;
 import com.cloudvision.utp.quieroentradas.presentation.ui.fragment.ProfileFragment;
 import com.cloudvision.utp.quieroentradas.presentation.ui.fragment.SearchFragment;
+import com.cloudvision.utp.quieroentradas.presentation.ui.fragment.StadisticFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
 import java.util.Map;
-import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -51,13 +46,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.navigation_drawer);
-
         auth = FirebaseAuth.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
-
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -65,23 +57,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fullname = (TextView) navView.findViewById(R.id.niv_header_fullname);
         email = (TextView) navView.findViewById(R.id.niv_header_email);
         circleImageView = (CircleImageView) navView.findViewById(R.id.niv_header_photo);
-
         userResponse = getSessionSharedPreferences();
         Glide.with(this).load(Uri.parse(userResponse.getSexUri())).into(circleImageView);
         fullname.setText(new StringBuilder(userResponse.getName()).append(" ").append(userResponse.getLastName()).toString());
         email.setText(userResponse.getEmail());
-
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_drawer, R.string.close_drawer);
-
         drawerLayout.setDrawerListener(toggle);
-
         toggle.syncState();
-
+        displaySelectedFrame(R.id.nitMySearching);
         /*Bundle data = new Bundle();
         data.putString("userCode", Objects.requireNonNull(user.getEmail()).substring(0,7));*/
-
-        displaySelectedFrame(R.id.nitMySearching);
-
         /*//TODO
         lastSearchFragment = new LastSearchFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -117,16 +102,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 fragment = new SearchFragment();
                 break;
             case R.id.nitRanking:
-                Toast.makeText(getApplicationContext(), "ranking", Toast.LENGTH_LONG).show();
+                fragment = new StadisticFragment();
                 break;
             case R.id.nitProfile:
                 fragment = new ProfileFragment();
                 break;
             case R.id.nitLogout:
                 isFragment = false;
-                session.logoutSession();
                 FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                session.logoutSession();
                 break;
         }
         if(fragment != null && isFragment){

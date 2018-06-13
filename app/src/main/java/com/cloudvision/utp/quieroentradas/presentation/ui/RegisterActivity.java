@@ -77,11 +77,15 @@ public class RegisterActivity extends AppCompatActivity {
                 int rbSelected = rbSexGroup.getCheckedRadioButtonId();
                 hideKeyBoard();
                 boolean isOk = preValidateFields(email, password, name, lastname, rbSelected);
+
                 if (isOk) {
+                    Log.d(TAG, "onClick: enter validate OK");
+
                     emailWrap.setErrorEnabled(false);
                     passwordWrap.setErrorEnabled(false);
                     nameWrap.setErrorEnabled(false);
                     lastnameWrap.setErrorEnabled(false);
+
                     //Crear usuario
                     auth.createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
@@ -89,7 +93,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     String username = null;
                                     if (!task.isSuccessful()) {
-                                        //Log.d(TAG, "error " + task.getException());
+                                        Log.d(TAG, "error when press register" + task.getException());
                                         try {
                                             throw task.getException();
                                         } catch (FirebaseAuthUserCollisionException invalidEmail) {
@@ -107,6 +111,8 @@ public class RegisterActivity extends AppCompatActivity {
                                         dialog.setCanceledOnTouchOutside(false);
                                         dialog.show();
                                     } else {
+                                        Log.d(TAG, "onComplete: success is ok");
+
                                         user = FirebaseAuth.getInstance().getCurrentUser();
                                         String[] lastNameArr = lastname.split(" ");
                                         if (lastNameArr != null && lastNameArr.length > 0) {
