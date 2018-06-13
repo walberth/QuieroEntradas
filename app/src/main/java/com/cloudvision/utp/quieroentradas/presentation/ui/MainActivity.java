@@ -23,6 +23,7 @@ import com.cloudvision.utp.quieroentradas.R;
 import com.cloudvision.utp.quieroentradas.data.datasource.session.UserSessionManager;
 import com.cloudvision.utp.quieroentradas.data.model.User;
 import com.cloudvision.utp.quieroentradas.presentation.ui.fragment.LastSearchFragment;
+import com.cloudvision.utp.quieroentradas.presentation.ui.fragment.ProfileFragment;
 import com.cloudvision.utp.quieroentradas.presentation.ui.fragment.SearchFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -76,15 +77,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         toggle.syncState();
 
-        Bundle data = new Bundle();
-        data.putString("userCode", Objects.requireNonNull(user.getEmail()).substring(0,7));
+        /*Bundle data = new Bundle();
+        data.putString("userCode", Objects.requireNonNull(user.getEmail()).substring(0,7));*/
 
-        //TODO
+        displaySelectedFrame(R.id.nitMySearching);
+
+        /*//TODO
         lastSearchFragment = new LastSearchFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         lastSearchFragment.setArguments(data);
         fragmentTransaction.add(R.id.content, lastSearchFragment);
-        fragmentTransaction.commit();
+        fragmentTransaction.commit();*/
     }
 
     @Override
@@ -99,46 +102,48 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        switch (id) {
+        displaySelectedFrame(id);
+        return true;
+    }
+
+    private void displaySelectedFrame(int item){
+        Fragment fragment = null;
+        boolean isFragment = true;
+        switch (item) {
             case R.id.nitMySearching:
-                LastSearchFragment lastSearchFragment = new LastSearchFragment();
-                getSupportFragmentManager().beginTransaction().replace(R.id.content, lastSearchFragment)
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                        .addToBackStack(null).commit();
+                fragment = new LastSearchFragment();
                 break;
             case R.id.nitSearch:
-                SearchFragment searchFragment = new SearchFragment();
-                getSupportFragmentManager().beginTransaction().replace(R.id.content, searchFragment)
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                        .addToBackStack(null).commit();
+                fragment = new SearchFragment();
                 break;
             case R.id.nitRanking:
                 Toast.makeText(getApplicationContext(), "ranking", Toast.LENGTH_LONG).show();
                 break;
             case R.id.nitProfile:
-                Toast.makeText(getApplicationContext(), "profile", Toast.LENGTH_LONG).show();
+                fragment = new ProfileFragment();
                 break;
             case R.id.nitLogout:
+                isFragment = false;
+                session.logoutSession();
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 break;
         }
+        if(fragment != null && isFragment){
+            showFragment(fragment);
+        }
         drawerLayout.closeDrawer(GravityCompat.START);
-        return true;
     }
 
-    public void showFragment(Fragment fragment){
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.content,fragment);
-        ft.addToBackStack(null);
-        ft.commit();
+    private void showFragment(Fragment fragment){
+        getSupportFragmentManager().beginTransaction().replace(R.id.content,fragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).addToBackStack(null).commit();
     }
 
     public User getSessionSharedPreferences() {
         session = new UserSessionManager(getApplicationContext());
         if (session.checkLogin()) finish();
         Map<String, Object> user = session.getUserDetails();
-        Log.d(TAG, "uiemail init d " +  user.get(UserSessionManager.KEY_SEX_URI));
         return new User((String) user.get(UserSessionManager.KEY_ID),
                 (String) user.get(UserSessionManager.KEY_NAME),
                 (String) user.get(UserSessionManager.KEY_LASTNAME),

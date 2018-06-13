@@ -1,5 +1,9 @@
 package com.cloudvision.utp.quieroentradas.helpers.utils;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -45,5 +49,14 @@ public class Dates {
         return getExtractDateFromCalendar(calendar, Calendar.DATE) + " de "
                 + getNameMonthFromDate(calendar) + " de "
                 + getExtractDateFromCalendar(calendar, Calendar.YEAR);
+    }
+
+    public static Date getDateByLongValue(long value){
+        return new Date(value);
+    }
+
+    public static String getDaysFromDateParamToToday(Date parameter){
+        return new StringBuilder("Hace ").append(Days.daysBetween(new DateTime(new Date()), new DateTime(parameter)).getDays())
+                .append(" días").toString();
     }
 }
