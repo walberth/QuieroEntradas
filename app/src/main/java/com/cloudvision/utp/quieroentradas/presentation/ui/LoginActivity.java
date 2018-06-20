@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.cloudvision.utp.quieroentradas.R;
+import com.cloudvision.utp.quieroentradas.Search2;
 import com.cloudvision.utp.quieroentradas.data.datasource.session.UserSessionManager;
 import com.cloudvision.utp.quieroentradas.data.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -58,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                Intent intent = new Intent(LoginActivity.this, Search2.class);
                 startActivity(intent);
             }
         });

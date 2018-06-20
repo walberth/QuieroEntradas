@@ -2,30 +2,19 @@ package com.cloudvision.utp.quieroentradas.data.model;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
-import java.util.Date;
-
 @IgnoreExtraProperties
 public class UserSearch {
-    private String uid;
     private String idUser;
     private String picture;
+    private long dateTimeSearch;
 
     public UserSearch() {
     }
 
-    public UserSearch(String uid, String idUser, String picture) {
-        this.uid = uid;
+    public UserSearch(String idUser, String picture, long dateTimeSearch) {
         this.idUser = idUser;
-        long dateTimeSearch = new Date().getTime();
         this.picture = picture;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
+        this.dateTimeSearch = dateTimeSearch;
     }
 
     public String getIdUser() {
@@ -42,5 +31,13 @@ public class UserSearch {
 
     public void setPicture(String picture) {
         this.picture = picture;
+    }
+
+    public long getDateTimeSearch() {
+        return dateTimeSearch;
+    }
+
+    public void setDateTimeSearch(long dateTimeSearch) {
+        this.dateTimeSearch = dateTimeSearch;
     }
 }
