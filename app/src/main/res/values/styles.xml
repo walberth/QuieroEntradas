@@ -58,4 +58,49 @@
     <style name="NavigationView">
         <item name="android:textColorSecondary">@color/colorTextPrimary</item>
     </style>
+
+    <!-- Text Styles -->
+    <style name="TextStyle" parent="TextAppearance.AppCompat">
+    </style>
+
+    <style name="TextStyle.Title" parent="TextAppearance.AppCompat.Title">
+    </style>
+
+    <!-- Default Dialog Theme -->
+    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
+    </style>
+
+    <!-- Blue Dialog Theme -->
+    <style name="AppTheme.Dialog.Blue">
+        <item name="colorPrimary">@color/material_blue_500</item>
+        <item name="colorPrimaryDark">@color/material_blue_700</item>
+        <item name="colorAccent">@color/material_blue_a700</item>
+    </style>
+
+    <!-- Default Alert Dialog Theme -->
+    <style name="AppTheme.Dialog.Alert" parent="Theme.AppCompat.Light.Dialog.Alert">
+    </style>
+
+    <!-- Blue Alert Dialog Theme -->
+    <style name="AppTheme.Dialog.Alert.Blue">
+        <item name="colorPrimary">@color/material_blue_500</item>
+        <item name="colorPrimaryDark">@color/material_blue_700</item>
+        <item name="colorAccent">@color/material_blue_a700</item>
+    </style>
+
+    <!-- Blue App Theme -->
+    <style name="BaseTheme.Blue" parent="AppThemeOfficial">
+        <!-- Attributes for all APIs -->
+        <item name="colorPrimary">@color/material_blue_500</item>
+        <item name="colorPrimaryDark">@color/material_blue_700</item>
+        <item name="colorAccent">@color/material_blue_a700</item>
+        <item name="dialogTheme">@style/AppTheme.Dialog.Blue</item>
+        <item name="alertDialogTheme">@style/AppTheme.Dialog.Alert.Blue</item>
+    </style>
+
+    <style name="AppTheme.Blue" parent="BaseTheme.Blue">
+        <!-- API specific attributes 14+ -->
+        <!--<item name="selectableRectDrawableColored">@drawable/state_list_selectable_rect_blue</item>
+        <item name="selectableRoundedRectDrawableColored">@drawable/state_list_selectable_rounded_rect_blue</item>-->
+    </style>
 </resources>

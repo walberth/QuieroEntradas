@@ -8,12 +8,13 @@
     android:fitsSystemWindows="true"
     tools:context=".presentation.ui.RegisterActivity">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-    </android.support.design.widget.AppBarLayout>
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        app:titleTextColor="@color/colorWhite2"
+        app:popupTheme="@style/AppThemeOfficial.PopupOverlay"/>
 
     <LinearLayout
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -21,38 +22,41 @@
         android:layout_height="fill_parent"
         android:gravity="center"
         android:orientation="vertical"
+        android:layout_marginTop="?android:attr/actionBarSize"
         android:padding="16dp">
 
-        <TextView
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/emailWrap"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginBottom="30dp"
-            android:text="REGISTRO"
-            android:textSize="25sp"/>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            app:errorEnabled="true"
+            app:errorTextAppearance="@style/FieldErrorTextNormal"
+            app:hintTextAppearance="@style/FieldHintTextNormal">
 
             <EditText
-                android:id="@+id/registerEmail"
+                android:id="@+id/email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/email"
                 android:inputType="textEmailAddress"
                 android:imeOptions="actionNext"
                 android:maxLines="1"
-                android:textColor="@color/input_register" />
+                android:textColor="@color/colorBlack"
+                android:textColorHint="@color/colorBlack"
+                android:theme="@style/FieldTextNormal"/>
 
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
+            android:id="@+id/passwordWrap"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:errorEnabled="true"
+            app:errorTextAppearance="@style/FieldErrorTextNormal"
+            app:hintTextAppearance="@style/FieldHintTextNormal">
 
             <EditText
-                android:id="@+id/registerPassword"
+                android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusableInTouchMode="true"
@@ -60,74 +64,135 @@
                 android:imeOptions="actionUnspecified"
                 android:inputType="textPassword"
                 android:maxLines="1"
-                android:textColor="@color/input_register" />
+                android:textColor="@color/colorBlack"
+                android:textColorHint="@color/colorBlack"
+                android:theme="@style/FieldTextNormal" />
 
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
+            android:id="@+id/nameWrap"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:errorEnabled="true"
+            app:errorTextAppearance="@style/FieldErrorTextNormal"
+            app:hintTextAppearance="@style/FieldHintTextNormal">
 
             <EditText
-                android:id="@+id/registerName"
+                android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/name"
                 android:imeOptions="actionNext"
                 android:inputType="textPersonName"
                 android:maxLines="1"
-                android:textColor="@color/input_register" />
+                android:textColor="@color/colorBlack"
+                android:textColorHint="@color/colorBlack"
+                android:theme="@style/FieldTextNormal" />
 
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
+            android:id="@+id/lastnameWrap"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:errorEnabled="true"
+            app:errorTextAppearance="@style/FieldErrorTextNormal"
+            app:hintTextAppearance="@style/FieldHintTextNormal">
 
             <EditText
-                android:id="@+id/registerLastName"
+                android:id="@+id/lastname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/lastName"
                 android:imeOptions="actionNext"
                 android:inputType="textPersonName"
                 android:maxLines="1"
-                android:textColor="@color/input_register" />
+                android:textColor="@color/colorBlack"
+                android:textColorHint="@color/colorBlack"
+                android:theme="@style/FieldTextNormal" />
 
         </android.support.design.widget.TextInputLayout>
 
-        <!-- Sign up Button -->
-
-        <Button
-            android:id="@+id/sign_up_button"
-            style="?android:textAppearanceSmall"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@color/btn_login_register"
-            android:text="@string/action_sign_in_short"
-            android:textColor="@color/white"
-            android:textStyle="bold" />
+            android:orientation="horizontal"
+            android:layout_marginTop="15dp">
 
-        <!-- Link to Login Screen -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/register_rb_sex"
+                android:textColor="@color/colorBlack"
+                android:textStyle="bold"
+                android:textAppearance="@style/TextStyle.Title"
+                android:layout_marginEnd="50dp"
+                android:layout_marginTop="15dp"/>
 
-        <Button
-            android:id="@+id/sign_in"
-            android:layout_width="fill_parent"
+            <RadioGroup
+                android:id="@+id/rbSexGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rbMale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/register_rb_sex_male"
+                    android:theme="@style/AppTheme.Blue"/>
+
+                <RadioButton
+                    android:id="@+id/rbFemale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/register_rb_sex_female"
+                    android:theme="@style/AppTheme.Blue"/>
+            </RadioGroup>
+        </LinearLayout>
+
+        <!--<Button
+            android:id="@+id/btnSignUp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dip"
-            android:background="@null"
-            android:text="@string/btn_link_to_login"
-            android:textAllCaps="false"
-            android:textColor="@color/btn_register"
-            android:textSize="15sp" />
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="48dp"
+            android:layout_marginLeft="48dp"
+            android:layout_marginRight="48dp"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="45dp"
+            android:background="@color/colorPrimaryDark"
+            android:elevation="10dp"
+            android:text="@string/register_button"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorWhite2"/>-->
+
+        <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
+            android:id="@+id/btnSignUp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="48dp"
+            android:layout_marginLeft="48dp"
+            android:layout_marginRight="48dp"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="45dp"
+            android:background="@drawable/rounded_corners_blue"
+            android:text="@string/register_button"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorWhite2"
+            android:elevation="10dp"
+            app:initialCornerAngle="2dp"
+            app:spinning_bar_color="#FFFFFF"
+            app:spinning_bar_padding="6dp"
+            app:spinning_bar_width="4dp"/>
+
     </LinearLayout>
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_gravity="center|bottom"
-        android:layout_marginBottom="10dp"
-        android:visibility="gone" />
 </android.support.design.widget.CoordinatorLayout>

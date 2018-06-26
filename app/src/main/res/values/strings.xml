@@ -21,6 +21,8 @@
     <string name="inputPasswordLengthError">Contraseña debe tener más de 6 caracteres.</string>
     <string name="wrongEmailError">Correo electrónico inválido.</string>
     <string name="wrongPasswordError">Contraseña inválido.</string>
+    <string name="inputNameError">Ingrese nombre.</string>
+    <string name="inputLastnameError">Ingrese apellidos.</string>
     <string name="unkwownError">Error desconocido.</string>
     <string name="navDrawerUser">Imagen usuario general.</string>
     <string name="nav_item_mysearching">Mis Búsquedas</string>
@@ -32,6 +34,16 @@
     <string name="nit_logout">Cerrar Sesión</string>
     <string name="nit_configuration">Configuración</string>
     <string name="nit_profile">Mi Perfil</string>
+    <string name="dialog_title_error">¡Error!</string>
+    <string name="dialog_ok_button">Aceptar</string>
+    <string name="dialog_error_register_message">Error en creación de su cuenta de usuario.</string>
+    <string name="dialog_error_rb_sex_message">Seleccione un sexo del formulario.</string>
+    <string name="dialog_register_title_success">Usuario Registrado</string>
+    <string name="dialog_register_message_success">Se completó el registro satisfactoriamente.</string>
+    <string name="dialog_login_button">Ir a inicio de Sesión</string>
+    <string name="inputEmailExistError">Correo electrónico existente.</string>
+    <string name="hideKeyboardViewError">Teclado no está visible.</string>
+    <string name="inputEmailNotExistError">Correo electrónico no existe.</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -46,4 +58,14 @@
     <!-- Strings for search detail -->
     <string name="btnSendImage">ENVIAR</string>
     <string name="btnCancelImage">CANCELAR</string>
+    <string name="toolbar_Register_Title">Registro de Usuario</string>
+    <string name="register_button">Registrar</string>
+    <string name="register_rb_sex">Sexo</string>
+    <string name="register_rb_sex_male">Masculino</string>
+    <string name="register_rb_sex_female">Femenino</string>
+    <string name="profile_email_title">Correo Electrónico</string>
+    <string name="profile_name_title">Nombre</string>
+    <string name="profile_username_title">Usuario</string>
+    <string name="profile_sex_title">Sexo</string>
+    <string name="profile_creation_date_title">Creación</string>
 </resources>
