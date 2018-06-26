@@ -1,5 +1,7 @@
 package com.cloudvision.utp.quieroentradas.presentation.ui.fragment;
 
+import android.annotation.SuppressLint;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -11,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +32,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -44,9 +48,8 @@ import static android.app.Activity.RESULT_OK;
 public class LastSearchFragment extends Fragment {
     private static final int CAMERA_REQUEST_CODE = 102;
     private static final int IMAGE_QUALITY = 100;
+    private static final String INFORMATION_TO_GET = "data";
     private Bitmap bitmap;
-    private Uri mCapturedImageURI;
-    private BitmapDrawable drawable;
     private File sdCardDirectory;
     private File image;
     private StorageReference storageReference;
@@ -58,6 +61,7 @@ public class LastSearchFragment extends Fragment {
     private String imageName;
     private FirebaseUser user;
     private Uri downloadUrl;
+    private Bitmap bitmapPicture;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -94,15 +98,13 @@ public class LastSearchFragment extends Fragment {
 
         if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
             boolean result = savePicture(data);
+            bitmapPicture = (Bitmap) Objects.requireNonNull(data.getExtras()).get(INFORMATION_TO_GET);
 
             if(result){
                 boolean uploadFileResult = uploadFireabsePicture();
-                //boolean saveToFirebaseDatabase = saveRegisterToFirebase();
 
                 if(uploadFileResult) {
-                    //if(saveToFirebaseDatabase) {
-                        Toast.makeText(getActivity(), "Image saved in storage with success", Toast.LENGTH_LONG).show();
-                    //}
+                    Toast.makeText(getActivity(), "Image saved in storage with success", Toast.LENGTH_LONG).show();
                 }
             } else {
                 Toast.makeText(getActivity(), "Error during image saving", Toast.LENGTH_LONG).show();
@@ -110,6 +112,7 @@ public class LastSearchFragment extends Fragment {
         }
     }
 
+    @SuppressLint("SimpleDateFormat")
     public boolean savePicture (Intent data){
         bitmap = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
         sdCardDirectory = Environment.getExternalStorageDirectory();
@@ -162,6 +165,8 @@ public class LastSearchFragment extends Fragment {
 
                             if(saveToFirebaseDatabase) {
                                 Toast.makeText(getActivity(), "Image saved in database with success", Toast.LENGTH_LONG).show();
+
+                                sendBundleToFragment(imagePath);
                             }
                         }
                     });
@@ -176,7 +181,6 @@ public class LastSearchFragment extends Fragment {
         return success;
     }
 
-    //TODO: SAVE THE INFORMATION TO DATABASE
     public boolean saveRegisterToFirebase() {
         boolean success = false;
 
@@ -201,5 +205,21 @@ public class LastSearchFragment extends Fragment {
 
         return success;
     }
-    //TODO: BIND THE INFORMATION TO THE VIEW (ONLY THE PICTURE) IF NECESSARY
+
+    public void sendBundleToFragment(String uriPath){
+        try {
+            Bundle args  = new Bundle();
+            args.putParcelable("picture", bitmapPicture);
+
+            android.support.v4.app.FragmentManager fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+            ImageToSendFragment imageToSendFragment = new ImageToSendFragment();
+            imageToSendFragment.setArguments(args);
+
+            fragmentTransaction.replace(R.id.content, imageToSendFragment).commit();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 }

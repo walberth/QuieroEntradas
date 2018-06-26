@@ -60,5 +60,8 @@ dependencies {
     implementation 'net.danlew:android.joda:2.9.9.4'
     /*Android Stadistics Chart*/
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+
+    implementation 'com.android.volley:volley:1.0.0'
+
 }
 apply plugin: 'com.google.gms.google-services'

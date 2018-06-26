@@ -58,7 +58,6 @@ public class Search2 extends AppCompatActivity implements AdapterView.OnItemSele
     private Feature feature;
     private Bitmap bitmap;
     private String[] visionAPI = new String[]{ "LOGO_DETECTION", "WEB_DETECTION"};
-
     private String api = visionAPI[0];
 
     @Override
