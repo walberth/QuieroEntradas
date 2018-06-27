@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.android.volley.Request;
@@ -70,6 +71,7 @@ public class ImageToSendFragment extends Fragment {
     protected TextView visionInformation;
     private Feature feature;
     private Bitmap bitmapImage;
+    //private LinearLayout linearLayoutImageToSend;
 
     public ImageToSendFragment() {
     }
@@ -96,6 +98,7 @@ public class ImageToSendFragment extends Fragment {
         Button btnCancel = view.findViewById(R.id.btnCancel);
         ImageView imgPicture = view.findViewById(R.id.imgPicture);
 
+        //linearLayoutImageToSend = view.findViewById(R.id.linearLayoutImageToSend);
         imageToSendProgressBar =  view.findViewById(R.id.imageToSendProgressBar);
         visionInformation = view.findViewById(R.id.visionAPIData);
         feature = new Feature();
@@ -135,6 +138,7 @@ public class ImageToSendFragment extends Fragment {
 
     private void callCloudVision(final Bitmap bitmap, final Feature feature) {
         imageToSendProgressBar.setVisibility(View.VISIBLE);
+        //linearLayoutImageToSend.setVisibility(View.VISIBLE);
 
         final List<Feature> featureList = new ArrayList<>();
         featureList.add(feature);
@@ -191,6 +195,7 @@ public class ImageToSendFragment extends Fragment {
                 eventsFoundFragment.setArguments(data);
                 fragmentTransaction.replace(R.id.content, eventsFoundFragment).commit();
 
+                //linearLayoutImageToSend.setVisibility(View.GONE);
                 imageToSendProgressBar.setVisibility(View.INVISIBLE);
             }
         }.execute();

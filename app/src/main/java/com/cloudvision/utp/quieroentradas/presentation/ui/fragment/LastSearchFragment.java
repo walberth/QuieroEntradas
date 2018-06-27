@@ -1,10 +1,8 @@
 package com.cloudvision.utp.quieroentradas.presentation.ui.fragment;
 
 import android.annotation.SuppressLint;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -19,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.cloudvision.utp.quieroentradas.R;
@@ -32,7 +31,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -62,10 +60,11 @@ public class LastSearchFragment extends Fragment {
     private FirebaseUser user;
     private Uri downloadUrl;
     private Bitmap bitmapPicture;
+    private ProgressBar progressBarLastSearch;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_lastsearch, container, false);
+        return inflater.inflate(R.layout.fragment_last_search, container, false);
 
     }
 
@@ -76,6 +75,7 @@ public class LastSearchFragment extends Fragment {
         Objects.requireNonNull(getActivity()).setTitle(getResources().getString(R.string.nav_item_mysearching));
         FloatingActionButton fabCamera = view.findViewById(R.id.fabCamera);
         storageReference = FirebaseStorage.getInstance().getReference();
+        progressBarLastSearch =  view.findViewById(R.id.progressBarLastSearch);
         fabCamera.setOnClickListener(new btnTakePhotoClicker());
         user = FirebaseAuth.getInstance().getCurrentUser();
     }
@@ -95,6 +95,7 @@ public class LastSearchFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        progressBarLastSearch.setVisibility(View.VISIBLE);
 
         if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
             boolean result = savePicture(data);
@@ -217,6 +218,7 @@ public class LastSearchFragment extends Fragment {
             ImageToSendFragment imageToSendFragment = new ImageToSendFragment();
             imageToSendFragment.setArguments(args);
 
+            progressBarLastSearch.setVisibility(View.INVISIBLE);
             fragmentTransaction.replace(R.id.content, imageToSendFragment).commit();
         } catch (Exception ex) {
             ex.printStackTrace();

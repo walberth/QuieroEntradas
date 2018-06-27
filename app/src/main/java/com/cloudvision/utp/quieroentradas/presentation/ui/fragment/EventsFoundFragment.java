@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -44,6 +45,7 @@ public class EventsFoundFragment extends Fragment {
     private String groupName;
     private FirebaseUser user;
     private ProgressBar progressBarEventsFound;
+    //private LinearLayout linearLayoutEventsFound;
 
     public interface VolleyCallback{
         void onSuccessResponse(String result);
@@ -68,6 +70,7 @@ public class EventsFoundFragment extends Fragment {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         progressBarEventsFound = view.findViewById(R.id.progressBarEventsFound);
+        //linearLayoutEventsFound = view.findViewById(R.id.linearLayoutEventsFound)
         eventsFoundList = new ArrayList<>();
         recyclerEventsFound = view.findViewById(R.id.recyclerEventsFound);
         recyclerEventsFound.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -78,7 +81,7 @@ public class EventsFoundFragment extends Fragment {
     public void wsSongClickCallback(String artistName) {
         final String URL_TO_CONSUME = URL_WS + "Radiohead";/*artistName*/
         progressBarEventsFound.setVisibility(View.VISIBLE);
-
+        //linearLayoutEventsFound.setVisibility(View.VISIBLE);
         getSongClickInformation(URL_TO_CONSUME,
                 new EventsFoundFragment.VolleyCallback(){
                     @Override
@@ -142,8 +145,6 @@ public class EventsFoundFragment extends Fragment {
     }
 
     private void getSongClickInformation(String url, final EventsFoundFragment.VolleyCallback callback) {
-        //showDialog();
-
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {

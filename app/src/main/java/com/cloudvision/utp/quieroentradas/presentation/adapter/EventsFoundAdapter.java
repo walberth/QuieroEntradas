@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cloudvision.utp.quieroentradas.R;
 import com.cloudvision.utp.quieroentradas.data.model.EventsFound;
@@ -74,6 +75,8 @@ public class EventsFoundAdapter extends SelectableAdapter<EventsFoundAdapter.Vie
     class btnSeeEventFound implements Button.OnClickListener {
         @Override
         public void onClick(View view) {
+            Toast.makeText(context.getApplicationContext(), "Yo want to review the detail", Toast.LENGTH_LONG).show();
+
             Log.d(TAG, "onClick: Go to the other fragment");
         }
     }
