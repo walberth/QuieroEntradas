@@ -71,6 +71,7 @@ public class ImageToSendFragment extends Fragment {
     protected TextView visionInformation;
     private Feature feature;
     private Bitmap bitmapImage;
+    private String groupName;
     //private LinearLayout linearLayoutImageToSend;
 
     public ImageToSendFragment() {
@@ -97,17 +98,17 @@ public class ImageToSendFragment extends Fragment {
         Button btnAccept = view.findViewById(R.id.btnAccept);
         Button btnCancel = view.findViewById(R.id.btnCancel);
         ImageView imgPicture = view.findViewById(R.id.imgPicture);
-
+        visionInformation = view.findViewById(R.id.visionInformation);
         //linearLayoutImageToSend = view.findViewById(R.id.linearLayoutImageToSend);
         imageToSendProgressBar =  view.findViewById(R.id.imageToSendProgressBar);
-        visionInformation = view.findViewById(R.id.visionAPIData);
         feature = new Feature();
         feature.setType(API_TYPE);
         feature.setMaxResults(10);
 
         imgPicture.setImageBitmap(bitmapImage);
+        passImageToCloudVision(feature);
 
-        btnAccept.setOnClickListener(new btnSendPictureToFirebase());
+        btnAccept.setOnClickListener(new btnSendBundleToFragment());
         btnCancel.setOnClickListener(new btnCancelPictureSending());
     }
 
@@ -115,6 +116,23 @@ public class ImageToSendFragment extends Fragment {
         @Override
         public void onClick(View view) {
             passImageToCloudVision(feature);
+        }
+    }
+
+    class btnSendBundleToFragment implements Button.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            try {
+                Bundle data = new Bundle();
+                data.putString("groupName", groupName);
+                android.support.v4.app.FragmentManager fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                EventsFoundFragment eventsFoundFragment = new EventsFoundFragment();
+                eventsFoundFragment.setArguments(data);
+                fragmentTransaction.replace(R.id.content, eventsFoundFragment).commit();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -184,17 +202,8 @@ public class ImageToSendFragment extends Fragment {
             }
 
             protected void onPostExecute(String result) {
-                Log.d(TAG, "onPostExecute: " + result);
-
-
-                Bundle data = new Bundle();
-                data.putString("groupName", result);
-                android.support.v4.app.FragmentManager fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                EventsFoundFragment eventsFoundFragment = new EventsFoundFragment();
-                eventsFoundFragment.setArguments(data);
-                fragmentTransaction.replace(R.id.content, eventsFoundFragment).commit();
-
+                groupName = result;
+                visionInformation.setText(result);
                 //linearLayoutImageToSend.setVisibility(View.GONE);
                 imageToSendProgressBar.setVisibility(View.INVISIBLE);
             }
