@@ -45,6 +45,7 @@ public class EventsFoundFragment extends Fragment {
     private String groupName;
     private FirebaseUser user;
     private ProgressBar progressBarEventsFound;
+    private String keyUserImageSearch;
     //private LinearLayout linearLayoutEventsFound;
 
     public interface VolleyCallback{
@@ -59,6 +60,7 @@ public class EventsFoundFragment extends Fragment {
         if(getArguments() != null) {
             Bundle mBundle = getArguments();
             groupName = mBundle.getString("groupName");
+            keyUserImageSearch = mBundle.getString("keyUserImageSearch");
         }
 
         return inflater.inflate(R.layout.fragment_events_found, container, false);
@@ -87,13 +89,19 @@ public class EventsFoundFragment extends Fragment {
                     @Override
                     public void onSuccessResponse(String result) {
                         try{
-
-
+                            String groupName = null;
                             JSONArray jsonArray = new JSONObject(result).getJSONObject("resultsPage").getJSONObject("results").getJSONArray("event");
 
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject childObject = jsonArray.getJSONObject(i);
 
+                                JSONArray performanceArray = childObject.optJSONArray("performance");
+
+                                for (int j = 0; j < performanceArray.length(); j++) {
+                                    JSONObject performaceValues = performanceArray.getJSONObject(j);
+
+                                    groupName = performaceValues.optString("displayName");
+                                }
                                 //-----------------------------------EventSearch
                                 EventSearch eventSearch = new EventSearch();
                                 eventSearch.setIdUser(user.getUid());
@@ -102,6 +110,7 @@ public class EventsFoundFragment extends Fragment {
                                 eventSearch.setEventDate(childObject.optJSONObject("start").optString("date"));
                                 eventSearch.setEventPicture("picture here");
                                 eventSearch.setEventDescription(childObject.optString("displayName"));
+                                eventSearch.setGroupName(groupName);
 
                                 /*Sending to firebase the eventSearchs*/
                                 String keyEventSearch = FirebaseDatabase.getInstance().getReference().child("eventSearch").push().getKey();
@@ -130,6 +139,14 @@ public class EventsFoundFragment extends Fragment {
 
                                 Log.d(TAG, "onSuccessResponse: " + childObject.optString("displayName"));
                             }
+
+                            //-----------------------------------Update UserSearch
+                            FirebaseDatabase.getInstance()
+                                    .getReference()
+                                    .child("userSearch")
+                                    .child(Objects.requireNonNull(keyUserImageSearch))
+                                    .child("groupName")
+                                    .setValue(groupName);
 
                             eventsFoundAdapter = new EventsFoundAdapter(recyclerEventsFound, eventsFoundList, getContext());
                             recyclerEventsFound.setHasFixedSize(true);

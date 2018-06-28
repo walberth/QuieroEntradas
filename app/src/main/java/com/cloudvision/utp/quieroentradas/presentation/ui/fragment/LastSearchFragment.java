@@ -12,6 +12,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,11 +23,18 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.cloudvision.utp.quieroentradas.R;
+import com.cloudvision.utp.quieroentradas.data.model.LastSearch;
 import com.cloudvision.utp.quieroentradas.data.model.UserSearch;
+import com.cloudvision.utp.quieroentradas.presentation.adapter.LastSearchAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -35,7 +44,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
@@ -61,11 +72,16 @@ public class LastSearchFragment extends Fragment {
     private Uri downloadUrl;
     private Bitmap bitmapPicture;
     private ProgressBar progressBarLastSearch;
+    private String keyUserImageSearch;
+    private List<LastSearch> lastSearchList;
+    private RecyclerView recyclerLastSearch;
+    private LastSearchAdapter lastSearchAdapter;
+    private DatabaseReference mFirebaseDatabase;
+    private FirebaseDatabase mFirebaseInstance;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_last_search, container, false);
-
     }
 
     @Override
@@ -78,6 +94,57 @@ public class LastSearchFragment extends Fragment {
         progressBarLastSearch =  view.findViewById(R.id.progressBarLastSearch);
         fabCamera.setOnClickListener(new btnTakePhotoClicker());
         user = FirebaseAuth.getInstance().getCurrentUser();
+
+        lastSearchList = new ArrayList<>();
+        recyclerLastSearch = view.findViewById(R.id.recyclerLasSearch);
+        recyclerLastSearch.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        /*mFirebaseInstance = FirebaseDatabase.getInstance();
+        mFirebaseDatabase = mFirebaseInstance.getReference();
+
+        mFirebaseDatabase.child("userSearch").orderByChild("idUser").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                LastSearch lastSearch = dataSnapshot.getValue(LastSearch.class);
+
+                if (lastSearch != null && lastSearch.getGroupName() != null) {
+                    final LastSearch search = new LastSearch();
+
+                    search.setGroupName(Objects.requireNonNull(lastSearch).getGroupName());
+                    search.setDateTimeSearched(lastSearch.getDateTimeSearched());
+                    search.setPictureSearched(lastSearch.getPictureSearched());
+
+                    lastSearchList.add(search);
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        lastSearchAdapter = new LastSearchAdapter(recyclerLastSearch, lastSearchList, getContext());
+        recyclerLastSearch.setHasFixedSize(true);
+        recyclerLastSearch.setAdapter(lastSearchAdapter);*/
+        setRecyclerView();
+
+        getLastSearchItems();
     }
 
     class btnTakePhotoClicker implements Button.OnClickListener {
@@ -167,7 +234,7 @@ public class LastSearchFragment extends Fragment {
                             if(saveToFirebaseDatabase) {
                                 Toast.makeText(getActivity(), "Image saved in database with success", Toast.LENGTH_LONG).show();
 
-                                sendBundleToFragment(imagePath);
+                                sendBundleToFragment();
                             }
                         }
                     });
@@ -189,16 +256,24 @@ public class LastSearchFragment extends Fragment {
             UserSearch firebaseUserSearch = new UserSearch(
                     user.getUid(),
                     downloadUrl.toString(),
-                    new Date().getTime()
+                    new Date().getTime(),
+                    ""
             );
 
             String imageNameFirebase = imageName.replace(".png", "");
 
+            keyUserImageSearch = FirebaseDatabase
+                                        .getInstance()
+                                        .getReference()
+                                        .child("userSearch")
+                                        .push()
+                                        .getKey();
             FirebaseDatabase.getInstance()
                     .getReference()
                     .child("userSearch")
-                    .child(imageNameFirebase)
+                    .child(Objects.requireNonNull(keyUserImageSearch))
                     .setValue(firebaseUserSearch);
+
             success = true;
         }catch (Exception ex) {
             ex.printStackTrace();
@@ -207,10 +282,11 @@ public class LastSearchFragment extends Fragment {
         return success;
     }
 
-    public void sendBundleToFragment(String uriPath){
+    public void sendBundleToFragment(){
         try {
             Bundle args  = new Bundle();
             args.putParcelable("picture", bitmapPicture);
+            args.putString("keyUserImageSearch", keyUserImageSearch);;
 
             android.support.v4.app.FragmentManager fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -220,6 +296,60 @@ public class LastSearchFragment extends Fragment {
 
             progressBarLastSearch.setVisibility(View.INVISIBLE);
             fragmentTransaction.replace(R.id.content, imageToSendFragment).commit();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void setRecyclerView(){
+        lastSearchAdapter = new LastSearchAdapter(recyclerLastSearch, lastSearchList, getContext());
+        recyclerLastSearch.setHasFixedSize(true);
+        recyclerLastSearch.setAdapter(lastSearchAdapter);
+    }
+
+
+    public void getLastSearchItems() {
+        mFirebaseInstance = FirebaseDatabase.getInstance();
+        mFirebaseDatabase = mFirebaseInstance.getReference();
+
+        try {
+            mFirebaseDatabase.child("userSearch").orderByChild("idUser").addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    UserSearch lastSearch = dataSnapshot.getValue(UserSearch.class);
+
+                    if (lastSearch != null && lastSearch.getGroupName() != null) {
+                        final LastSearch search = new LastSearch();
+
+                        search.setGroupName(Objects.requireNonNull(lastSearch).getGroupName());
+                        search.setDateTimeSearched(Long.toString(lastSearch.getDateTimeSearch()));
+                        search.setPictureSearched(lastSearch.getPicture());
+
+                        lastSearchList.add(search);
+                        lastSearchAdapter.notifyDataSetChanged();
+                    }
+                }
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
         } catch (Exception ex) {
             ex.printStackTrace();
         }

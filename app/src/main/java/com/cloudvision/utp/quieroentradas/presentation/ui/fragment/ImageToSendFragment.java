@@ -72,6 +72,7 @@ public class ImageToSendFragment extends Fragment {
     private Feature feature;
     private Bitmap bitmapImage;
     private String groupName;
+    private String keyUserImageSearch;
     //private LinearLayout linearLayoutImageToSend;
 
     public ImageToSendFragment() {
@@ -86,6 +87,7 @@ public class ImageToSendFragment extends Fragment {
         if(getArguments() != null) {
             Bundle mBundle = getArguments();
             bitmapImage = mBundle.getParcelable(DATA_RECEIVE);
+            keyUserImageSearch = mBundle.getString("keyUserImageSearch");
         }
 
         return inflater.inflate(R.layout.fragment_image_to_send, container, false);
@@ -125,6 +127,7 @@ public class ImageToSendFragment extends Fragment {
             try {
                 Bundle data = new Bundle();
                 data.putString("groupName", groupName);
+                data.putString("keyUserImageSearch", keyUserImageSearch);
                 android.support.v4.app.FragmentManager fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 EventsFoundFragment eventsFoundFragment = new EventsFoundFragment();
