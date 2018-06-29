@@ -120,8 +120,17 @@ public class RegisterActivity extends AppCompatActivity {
                                         }
                                         btnSignUp.revertAnimation();
                                         if(userSexEnum != null){
-                                            User firebaseUser = new User(user.getUid(), name, lastname, user.getEmail(),
-                                                    new Date().getTime(), username, userSexEnum.getName(), userSexEnum.getUri());
+                                            User firebaseUser = new User(
+                                                    user.getUid(),
+                                                    name,
+                                                    lastname,
+                                                    user.getEmail(),
+                                                    new Date().getTime(),
+                                                    username,
+                                                    userSexEnum.getName(),
+                                                    userSexEnum.getUri()
+                                            );
+
                                             if (user.getEmail() != null && username != null) {
                                                 FirebaseDatabase.getInstance()
                                                         .getReference()
