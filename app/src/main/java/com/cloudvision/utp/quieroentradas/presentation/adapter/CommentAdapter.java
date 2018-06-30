@@ -15,8 +15,6 @@ import com.cloudvision.utp.quieroentradas.presentation.ui.helpers.SelectableAdap
 
 import java.util.List;
 
-import static android.support.v7.widget.RecyclerView.*;
-
 /**
  * Created by Walberth Gutierrez Telles on 06,June,2018
  */
