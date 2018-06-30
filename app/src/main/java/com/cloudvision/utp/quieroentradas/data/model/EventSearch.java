@@ -2,38 +2,29 @@ package com.cloudvision.utp.quieroentradas.data.model;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
-import java.util.Date;
-
 @IgnoreExtraProperties
 public class EventSearch {
-    private String uid;
     private String idUser;
+    private long dateTimeSearch;
     private String eventName;
     private String eventDate;
     private String eventPicture;
     private String eventDescription;
     private String idLocation;
+    private String groupName;
 
     public EventSearch() {
     }
 
-    public EventSearch(String uid, String idUser, String eventName, String eventDate, String eventPicture, String eventDescription, String idLocation) {
-        this.uid = uid;
+    public EventSearch(String idUser, long dateTimeSearch, String eventName, String eventDate, String eventPicture, String eventDescription, String idLocation, String groupName) {
         this.idUser = idUser;
-        long dateTimeSearch = new Date().getTime();
+        this.dateTimeSearch = dateTimeSearch;
         this.eventName = eventName;
         this.eventDate = eventDate;
         this.eventPicture = eventPicture;
         this.eventDescription = eventDescription;
         this.idLocation = idLocation;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
+        this.groupName = groupName;
     }
 
     public String getIdUser() {
@@ -42,6 +33,14 @@ public class EventSearch {
 
     public void setIdUser(String idUser) {
         this.idUser = idUser;
+    }
+
+    public long getDateTimeSearch() {
+        return dateTimeSearch;
+    }
+
+    public void setDateTimeSearch(long dateTimeSearch) {
+        this.dateTimeSearch = dateTimeSearch;
     }
 
     public String getEventName() {
@@ -82,5 +81,13 @@ public class EventSearch {
 
     public void setIdLocation(String idLocation) {
         this.idLocation = idLocation;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 }
