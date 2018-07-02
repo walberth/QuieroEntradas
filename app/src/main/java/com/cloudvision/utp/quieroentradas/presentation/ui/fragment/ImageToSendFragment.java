@@ -1,10 +1,8 @@
 package com.cloudvision.utp.quieroentradas.presentation.ui.fragment;
 
-import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.android.volley.Request;
@@ -24,9 +21,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.cloudvision.utp.quieroentradas.R;
 import com.cloudvision.utp.quieroentradas.data.datasource.rest.VolleyController;
-import com.cloudvision.utp.quieroentradas.data.model.EventSearch;
-import com.cloudvision.utp.quieroentradas.data.model.EventsFound;
-import com.cloudvision.utp.quieroentradas.data.model.Place;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpTransport;
@@ -43,18 +37,9 @@ import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
 import com.google.api.services.vision.v1.model.WebDetection;
 import com.google.api.services.vision.v1.model.WebEntity;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -69,11 +54,9 @@ public class ImageToSendFragment extends Fragment {
     private static String[] visionAPI = new String[]{ "LOGO_DETECTION", "WEB_DETECTION"};
     private static String API_TYPE = visionAPI[1];
     protected TextView visionInformation;
-    private Feature feature;
     private Bitmap bitmapImage;
     private String groupName;
     private String keyUserImageSearch;
-    //private LinearLayout linearLayoutImageToSend;
 
     public ImageToSendFragment() {
     }
@@ -101,9 +84,8 @@ public class ImageToSendFragment extends Fragment {
         Button btnCancel = view.findViewById(R.id.btnCancel);
         ImageView imgPicture = view.findViewById(R.id.imgPicture);
         visionInformation = view.findViewById(R.id.visionInformation);
-        //linearLayoutImageToSend = view.findViewById(R.id.linearLayoutImageToSend);
         imageToSendProgressBar =  view.findViewById(R.id.imageToSendProgressBar);
-        feature = new Feature();
+        Feature feature = new Feature();
         feature.setType(API_TYPE);
         feature.setMaxResults(10);
 
@@ -112,13 +94,6 @@ public class ImageToSendFragment extends Fragment {
 
         btnAccept.setOnClickListener(new btnSendBundleToFragment());
         btnCancel.setOnClickListener(new btnCancelPictureSending());
-    }
-
-    class btnSendPictureToFirebase implements Button.OnClickListener {
-        @Override
-        public void onClick(View view) {
-            passImageToCloudVision(feature);
-        }
     }
 
     class btnSendBundleToFragment implements Button.OnClickListener {
@@ -159,7 +134,6 @@ public class ImageToSendFragment extends Fragment {
 
     private void callCloudVision(final Bitmap bitmap, final Feature feature) {
         imageToSendProgressBar.setVisibility(View.VISIBLE);
-        //linearLayoutImageToSend.setVisibility(View.VISIBLE);
 
         final List<Feature> featureList = new ArrayList<>();
         featureList.add(feature);
@@ -207,7 +181,6 @@ public class ImageToSendFragment extends Fragment {
             protected void onPostExecute(String result) {
                 groupName = result;
                 visionInformation.setText(result);
-                //linearLayoutImageToSend.setVisibility(View.GONE);
                 imageToSendProgressBar.setVisibility(View.INVISIBLE);
             }
         }.execute();
@@ -315,7 +288,6 @@ public class ImageToSendFragment extends Fragment {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.e(TAG, "onErrorResponse: error throw " + error.getMessage());
-                    //dialog.hide();
                 }
             });
         VolleyController.getInstance(getActivity()).addToRequestQueue(request);

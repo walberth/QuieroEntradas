@@ -23,7 +23,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.cloudvision.utp.quieroentradas.R;
-import com.cloudvision.utp.quieroentradas.data.model.LastSearch;
+import com.cloudvision.utp.quieroentradas.domain.model.LastSearch;
 import com.cloudvision.utp.quieroentradas.data.model.UserSearch;
 import com.cloudvision.utp.quieroentradas.presentation.adapter.LastSearchAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -34,7 +34,6 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -99,49 +98,6 @@ public class LastSearchFragment extends Fragment {
         recyclerLastSearch = view.findViewById(R.id.recyclerLasSearch);
         recyclerLastSearch.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        /*mFirebaseInstance = FirebaseDatabase.getInstance();
-        mFirebaseDatabase = mFirebaseInstance.getReference();
-
-        mFirebaseDatabase.child("userSearch").orderByChild("idUser").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                LastSearch lastSearch = dataSnapshot.getValue(LastSearch.class);
-
-                if (lastSearch != null && lastSearch.getGroupName() != null) {
-                    final LastSearch search = new LastSearch();
-
-                    search.setGroupName(Objects.requireNonNull(lastSearch).getGroupName());
-                    search.setDateTimeSearched(lastSearch.getDateTimeSearched());
-                    search.setPictureSearched(lastSearch.getPictureSearched());
-
-                    lastSearchList.add(search);
-                }
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        lastSearchAdapter = new LastSearchAdapter(recyclerLastSearch, lastSearchList, getContext());
-        recyclerLastSearch.setHasFixedSize(true);
-        recyclerLastSearch.setAdapter(lastSearchAdapter);*/
         setRecyclerView();
 
         getLastSearchItems();
@@ -268,6 +224,7 @@ public class LastSearchFragment extends Fragment {
                                         .child("userSearch")
                                         .push()
                                         .getKey();
+
             FirebaseDatabase.getInstance()
                     .getReference()
                     .child("userSearch")
@@ -307,7 +264,6 @@ public class LastSearchFragment extends Fragment {
         recyclerLastSearch.setAdapter(lastSearchAdapter);
     }
 
-
     public void getLastSearchItems() {
         mFirebaseInstance = FirebaseDatabase.getInstance();
         mFirebaseDatabase = mFirebaseInstance.getReference();
@@ -318,7 +274,10 @@ public class LastSearchFragment extends Fragment {
                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                     UserSearch lastSearch = dataSnapshot.getValue(UserSearch.class);
 
-                    if (lastSearch != null && lastSearch.getGroupName() != null) {
+                    if (lastSearch != null
+                            && lastSearch.getGroupName() != null
+                            && !lastSearch.getGroupName().equals("")
+                            && lastSearch.getIdUser().equals(user.getUid())) {
                         final LastSearch search = new LastSearch();
 
                         search.setGroupName(Objects.requireNonNull(lastSearch).getGroupName());

@@ -13,10 +13,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cloudvision.utp.quieroentradas.R;
-import com.cloudvision.utp.quieroentradas.data.model.EventSearch;
-import com.cloudvision.utp.quieroentradas.data.model.LastSearch;
+import com.cloudvision.utp.quieroentradas.domain.model.LastSearch;
 import com.cloudvision.utp.quieroentradas.presentation.ui.helpers.SelectableAdapter;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -68,7 +70,7 @@ public class LastSearchAdapter  extends SelectableAdapter<LastSearchAdapter.View
 
         public void bind(LastSearch lastSearch){
             eventName.setText(lastSearch.getGroupName());
-            eventDate.setText(lastSearch.getDateTimeSearched());
+            eventDate.setText(convertTime( Long.parseLong(lastSearch.getDateTimeSearched())));
         }
     }
 
@@ -79,5 +81,11 @@ public class LastSearchAdapter  extends SelectableAdapter<LastSearchAdapter.View
 
             Log.d(TAG, "onClick: Go to the other fragment");
         }
+    }
+
+    public String convertTime(long time){
+        Date date = new Date(time);
+        Format format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        return format.format(date);
     }
 }

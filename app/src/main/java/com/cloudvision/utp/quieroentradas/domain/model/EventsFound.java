@@ -1,12 +1,7 @@
-package com.cloudvision.utp.quieroentradas.data.model;
+package com.cloudvision.utp.quieroentradas.domain.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
-import java.io.Serializable;
 
 /**
  * Created by Walberth Gutierrez Telles on 24,June,2018
@@ -15,14 +10,26 @@ public class EventsFound implements Parcelable {
     private String eventName;
     private String eventLocation;
     private String eventPicture;
+    private String eventId;
+    private String eventSongClickId;
+    private String eventLocationId;
+    private String latitud;
+    private String longitud;
+    private String eventGroup;
 
     public EventsFound() {
     }
 
-    public EventsFound(String eventName, String eventLocation, String eventPicture) {
+    public EventsFound(String eventGroup, String latitud, String longitud, String eventId, String eventSongClickId, String eventLocationId, String eventName, String eventLocation, String eventPicture) {
         this.eventName = eventName;
         this.eventLocation = eventLocation;
         this.eventPicture = eventPicture;
+        this.eventId = eventId;
+        this.eventSongClickId = eventSongClickId;
+        this.eventLocationId = eventLocationId;
+        this.latitud = latitud;
+        this.longitud = longitud;
+        this.eventGroup = eventGroup;
     }
 
     protected EventsFound(Parcel in) {
@@ -42,6 +49,54 @@ public class EventsFound implements Parcelable {
             return new EventsFound[size];
         }
     };
+
+    public String getEventGroup() {
+        return eventGroup;
+    }
+
+    public void setEventGroup(String eventGroup) {
+        this.eventGroup = eventGroup;
+    }
+
+    public String getLatitud() {
+        return latitud;
+    }
+
+    public void setLatitud(String latitud) {
+        this.latitud = latitud;
+    }
+
+    public String getLongitud() {
+        return longitud;
+    }
+
+    public void setLongitud(String longitud) {
+        this.longitud = longitud;
+    }
+
+    public String getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
+    }
+
+    public String getEventSongClickId() {
+        return eventSongClickId;
+    }
+
+    public void setEventSongClickId(String eventSongClickId) {
+        this.eventSongClickId = eventSongClickId;
+    }
+
+    public String getEventLocationId() {
+        return eventLocationId;
+    }
+
+    public void setEventLocationId(String eventLocationId) {
+        this.eventLocationId = eventLocationId;
+    }
 
     public String getEventName() {
         return eventName;

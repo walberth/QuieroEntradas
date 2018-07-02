@@ -1,15 +1,17 @@
 package com.cloudvision.utp.quieroentradas.presentation.ui.fragment;
 
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -25,126 +27,112 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import static android.app.Activity.RESULT_OK;
+import static com.cloudvision.utp.quieroentradas.presentation.ui.MainActivity.userResponse;
+
 /**
  * Created by Walberth Gutierrez Telles on 05,June,2018
  */
 public class CommentFragment extends Fragment {
-
     private static final String TAG = "CommentFragment";
-
-    private static final int SIGN_IN_REQUEST_CODE = 1;
     private FirebaseListAdapter<CommentPlace> adapter;
     private FirebaseUser user;
     private FirebaseAuth auth;
-    private FirebaseAuth.AuthStateListener authStateListener;
+    private String idLocation;
+    private EditText inputComment;
+    private TextView messageText;
+    private TextView messageUser;
+    private TextView messageTime;
+    private ListView listOfMessages;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if(getArguments() != null) {
+            Bundle mBundle = getArguments();
+            idLocation = mBundle.getString("idLocation");
+        }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        adapter.startListening();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        adapter.stopListening();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_comment, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        FloatingActionButton fab = view.findViewById(R.id.fab);
         auth = FirebaseAuth.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
+        inputComment = view.findViewById(R.id.inputComment);
+        listOfMessages = view.findViewById(R.id.listOfMessages);
 
         if(FirebaseAuth.getInstance().getCurrentUser() == null) {
-            // Start sign in/sign up activity
-            startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().build(), SIGN_IN_REQUEST_CODE);
+            Toast.makeText(getActivity(), "Must be redirect to login", Toast.LENGTH_LONG).show();
+
         } else {
-            // User is already signed in. Therefore, display
-            // a welcome Toast
-            Toast.makeText(getContext(),
-                    "Welcome " + FirebaseAuth.getInstance()
-                            .getCurrentUser()
-                            .getDisplayName(),
-                    Toast.LENGTH_LONG)
-                    .show();
-
-            Log.d(TAG, "onCreate: getDisplayName " + user.getDisplayName());
-            Log.d(TAG, "onCreate: getUid " + user.getUid());
-            Log.d(TAG, "onCreate: getEmail " + user.getEmail());
-            Log.d(TAG, "onCreate: zzn " + user.zzn());
-            Log.d(TAG, "onCreate: " + user);
-
-            //TODO: CHANGE LISTVIEW FOR RECYCLERVIEW
-            /*START: displayChatMessages*/
-            //ListView listOfMessages = view.findViewById(R.id.list_of_messages);
-
-            Query query = FirebaseDatabase.getInstance().getReference().child("chats");
-
-            FirebaseListOptions<CommentPlace> options = new FirebaseListOptions.Builder<CommentPlace>()
-                    .setQuery(query, CommentPlace.class)
-                    .setLayout(R.layout.message)
-                    .setLifecycleOwner(this)
-                    .build();
-
-            adapter = new FirebaseListAdapter<CommentPlace>(options) {
-                @Override
-                protected void populateView(View v, CommentPlace model, int position) {
-                    // Get references to the views of message.xml
-                    TextView messageText = (TextView)v.findViewById(R.id.message_text);
-                    TextView messageUser = (TextView)v.findViewById(R.id.message_user);
-                    TextView messageTime = (TextView)v.findViewById(R.id.message_time);
-
-                    // Set their text
-                    messageText.setText(model.getMessageText());
-                    messageUser.setText(model.getIdUser());
-                    /*messageTime.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)",
-                        model.getDateTimeComment()));*/
-                }
-            };
-
-            //listOfMessages.setAdapter(adapter);
+            displayChatMessages();
         }
 
-        FloatingActionButton fab = view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //EditText input = view.findViewById(R.id.input);
-
-                // Read the input field and push a new instance
-                // of CommentPlace to the Firebase database
-                /*FirebaseDatabase.getInstance()
-                        .getReference()
-                        .child("chats")
-                        .push()
-                        *//*.setValue(new CommentPlace(input.getText().toString(),
-                                FirebaseAuth.getInstance()
-                                        .getCurrentUser()
-                                        .getDisplayName())
-                        );*//*
-
-                // Clear the input*/
-                //input.setText("");
-            }
-        });
+        fab.setOnClickListener(new sendCommentToFirebase());
     }
 
-    /*public void setRecyclerView(){
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        userCommentsAdapter = new UserCommentsAdapter(recyclerView,commentList,getContext());
-        recyclerView.setAdapter(userCommentsAdapter);
-    }*/
+    class sendCommentToFirebase implements Button.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            CommentPlace commentPlace = new CommentPlace();
+            commentPlace.setMessageText(inputComment.getText().toString());
+            commentPlace.setDateTimeComment(new Date().getTime());
+            commentPlace.setIdUser(user.getUid());
+            commentPlace.setIdSongclickPlace(idLocation);
+
+            FirebaseDatabase.getInstance().getReference().child("chats").push().setValue(commentPlace);
+
+            inputComment.setText("");
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == RESULT_OK) {
+            displayChatMessages();
+        }
+    }
+
+    private void displayChatMessages() {
+        Query query = FirebaseDatabase.getInstance().getReference().child("chats");
+
+        FirebaseListOptions<CommentPlace> options = new FirebaseListOptions.Builder<CommentPlace>()
+                .setQuery(query, CommentPlace.class)
+                .setLayout(R.layout.message)
+                .setLifecycleOwner(this)
+                .build();
+
+        adapter = new FirebaseListAdapter<CommentPlace>(options) {
+            @Override
+            @SuppressLint("SetTextI18n")
+            protected void populateView(View view, CommentPlace model, int position) {
+                if(model.getIdSongclickPlace().equals(idLocation)) {
+                    messageText = view.findViewById(R.id.message_text);
+                    messageUser = view.findViewById(R.id.message_user);
+                    messageTime = view.findViewById(R.id.message_time);
+
+                    messageText.setText(model.getMessageText());
+                    messageUser.setText(userResponse.getName() + " " + userResponse.getLastName());
+                    messageTime.setText(convertTime(model.getDateTimeComment()));
+                }
+            }
+        };
+
+        listOfMessages.setAdapter(adapter);
+    }
+
+    public String convertTime(long time){
+        Date date = new Date(time);
+        Format format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        return format.format(date);
+    }
 }
