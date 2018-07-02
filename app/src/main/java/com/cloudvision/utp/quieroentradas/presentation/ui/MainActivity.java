@@ -54,9 +54,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
         View navView = navigationView.getHeaderView(0);
-        fullname = (TextView) navView.findViewById(R.id.niv_header_fullname);
-        email = (TextView) navView.findViewById(R.id.niv_header_email);
-        circleImageView = (CircleImageView) navView.findViewById(R.id.niv_header_photo);
+        fullname = navView.findViewById(R.id.niv_header_fullname);
+        email = navView.findViewById(R.id.niv_header_email);
+        circleImageView = navView.findViewById(R.id.niv_header_photo);
         userResponse = getSessionSharedPreferences();
         Glide.with(this).load(Uri.parse(userResponse.getSexUri())).into(circleImageView);
         fullname.setText(new StringBuilder(userResponse.getName()).append(" ").append(userResponse.getLastName()).toString());
@@ -65,14 +65,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.setDrawerListener(toggle);
         toggle.syncState();
         displaySelectedFrame(R.id.nitMySearching);
-        /*Bundle data = new Bundle();
-        data.putString("userCode", Objects.requireNonNull(user.getEmail()).substring(0,7));*/
-        /*//TODO
-        lastSearchFragment = new LastSearchFragment();
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        lastSearchFragment.setArguments(data);
-        fragmentTransaction.add(R.id.content, lastSearchFragment);
-        fragmentTransaction.commit();*/
     }
 
     @Override

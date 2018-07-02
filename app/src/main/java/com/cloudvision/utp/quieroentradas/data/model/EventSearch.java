@@ -12,11 +12,13 @@ public class EventSearch {
     private String eventDescription;
     private String idLocation;
     private String groupName;
+    private String idEvent;
+    private String idPlace;
 
     public EventSearch() {
     }
 
-    public EventSearch(String idUser, long dateTimeSearch, String eventName, String eventDate, String eventPicture, String eventDescription, String idLocation, String groupName) {
+    public EventSearch(String idEvent, String idPlace, String idUser, long dateTimeSearch, String eventName, String eventDate, String eventPicture, String eventDescription, String idLocation, String groupName) {
         this.idUser = idUser;
         this.dateTimeSearch = dateTimeSearch;
         this.eventName = eventName;
@@ -25,6 +27,16 @@ public class EventSearch {
         this.eventDescription = eventDescription;
         this.idLocation = idLocation;
         this.groupName = groupName;
+        this.idPlace = idPlace;
+        this.idEvent = idEvent;
+    }
+
+    public String getIdEvent() {
+        return idEvent;
+    }
+
+    public void setIdEvent(String idEvent) {
+        this.idEvent = idEvent;
     }
 
     public String getIdUser() {
@@ -89,5 +101,13 @@ public class EventSearch {
 
     public void setGroupName(String groupName) {
         this.groupName = groupName;
+    }
+
+    public String getIdPlace() {
+        return idPlace;
+    }
+
+    public void setIdPlace(String idPlace) {
+        this.idPlace = idPlace;
     }
 }

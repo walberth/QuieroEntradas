@@ -1,4 +1,4 @@
-package com.cloudvision.utp.quieroentradas.data.model;
+package com.cloudvision.utp.quieroentradas.domain.model;
 
 /**
  * Created by Walberth Gutierrez Telles on 27,June,2018

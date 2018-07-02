@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -19,19 +18,24 @@ import com.android.volley.toolbox.StringRequest;
 import com.cloudvision.utp.quieroentradas.R;
 import com.cloudvision.utp.quieroentradas.data.datasource.rest.VolleyController;
 import com.cloudvision.utp.quieroentradas.data.model.EventSearch;
-import com.cloudvision.utp.quieroentradas.data.model.EventsFound;
+import com.cloudvision.utp.quieroentradas.domain.model.EventsFound;
 import com.cloudvision.utp.quieroentradas.data.model.Place;
 import com.cloudvision.utp.quieroentradas.presentation.adapter.EventsFoundAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Created by Walberth Gutierrez Telles on 25,June,2018
@@ -46,7 +50,6 @@ public class EventsFoundFragment extends Fragment {
     private FirebaseUser user;
     private ProgressBar progressBarEventsFound;
     private String keyUserImageSearch;
-    //private LinearLayout linearLayoutEventsFound;
 
     public interface VolleyCallback{
         void onSuccessResponse(String result);
@@ -56,7 +59,7 @@ public class EventsFoundFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if(getArguments() != null) {
             Bundle mBundle = getArguments();
             groupName = mBundle.getString("groupName");
@@ -72,18 +75,18 @@ public class EventsFoundFragment extends Fragment {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         progressBarEventsFound = view.findViewById(R.id.progressBarEventsFound);
-        //linearLayoutEventsFound = view.findViewById(R.id.linearLayoutEventsFound)
         eventsFoundList = new ArrayList<>();
         recyclerEventsFound = view.findViewById(R.id.recyclerEventsFound);
+
         recyclerEventsFound.setLayoutManager(new LinearLayoutManager(getContext()));
 
         wsSongClickCallback(groupName);
     }
 
     public void wsSongClickCallback(String artistName) {
-        final String URL_TO_CONSUME = URL_WS + "Radiohead";/*artistName*/
+        final String URL_TO_CONSUME = URL_WS + "Radiohead";/*artistName;*/
         progressBarEventsFound.setVisibility(View.VISIBLE);
-        //linearLayoutEventsFound.setVisibility(View.VISIBLE);
+
         getSongClickInformation(URL_TO_CONSUME,
                 new EventsFoundFragment.VolleyCallback(){
                     @Override
@@ -91,9 +94,10 @@ public class EventsFoundFragment extends Fragment {
                         try{
                             String groupName = null;
                             JSONArray jsonArray = new JSONObject(result).getJSONObject("resultsPage").getJSONObject("results").getJSONArray("event");
+                            final List<Place> songClickPlaces = new ArrayList<>();
 
                             for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject childObject = jsonArray.getJSONObject(i);
+                                final JSONObject childObject = jsonArray.getJSONObject(i);
 
                                 JSONArray performanceArray = childObject.optJSONArray("performance");
 
@@ -111,15 +115,18 @@ public class EventsFoundFragment extends Fragment {
                                 eventSearch.setEventPicture("picture here");
                                 eventSearch.setEventDescription(childObject.optString("displayName"));
                                 eventSearch.setGroupName(groupName);
+                                eventSearch.setIdPlace(childObject.optJSONObject("venue").optString("id"));
+                                eventSearch.setIdEvent(childObject.optString("id"));
 
                                 /*Sending to firebase the eventSearchs*/
-                                String keyEventSearch = FirebaseDatabase.getInstance().getReference().child("eventSearch").push().getKey();
+                                final String keyEventSearch = FirebaseDatabase.getInstance().getReference().child("eventSearch").push().getKey();
                                 FirebaseDatabase.getInstance().getReference().child("eventSearch").child(Objects.requireNonNull(keyEventSearch)).setValue(eventSearch);
 
                                 //------------------------------------Places
                                 Place place = new Place();
                                 place.setName(childObject.optJSONObject("venue").optString("displayName"));
 
+                                //Get the location
                                 String locationDisplayName = childObject.optJSONObject("venue").optJSONObject("metroArea").optString("displayName");
                                 String countryDisplayName = childObject.optJSONObject("venue").optJSONObject("metroArea").optJSONObject("country").optString("displayName");
                                 String location = locationDisplayName + ", " + countryDisplayName;
@@ -127,18 +134,50 @@ public class EventsFoundFragment extends Fragment {
                                 place.setDirection(location);
                                 place.setLatitud(childObject.optJSONObject("venue").optString("lat"));
                                 place.setLongitud(childObject.optJSONObject("venue").optString("lng"));
-                                place.setEventid(keyEventSearch);
-                                FirebaseDatabase.getInstance().getReference().child("places").push().setValue(place);
+                                place.setUid(childObject.optJSONObject("venue").optString("id"));
+                                songClickPlaces.add(place);
 
                                 //--------------------------------------EventsFound
                                 EventsFound eventsFound = new EventsFound();
                                 eventsFound.setEventName(eventSearch.getEventName());
                                 eventsFound.setEventLocation(place.getDirection());
+                                eventsFound.setEventId(keyEventSearch);
+                                eventsFound.setEventSongClickId(childObject.optString("id"));
+                                eventsFound.setEventLocationId(childObject.optJSONObject("venue").optString("id"));
                                 eventsFound.setEventPicture("PICTURE SOMEWHERE");
+                                eventsFound.setLatitud(childObject.optJSONObject("venue").optString("lat"));
+                                eventsFound.setLongitud(childObject.optJSONObject("venue").optString("lng"));
+                                eventsFound.setEventGroup(groupName);
                                 eventsFoundList.add(eventsFound);
-
-                                Log.d(TAG, "onSuccessResponse: " + childObject.optString("displayName"));
                             }
+
+                            //-----------------------------------Inserting Places
+                            final List<Place> firebasePlaces = new ArrayList<>();
+
+                            FirebaseDatabase.getInstance().getReference().child("places").orderByChild("uid").addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if(dataSnapshot.getValue() != null) {
+                                        for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                            Place placeValue = data.getValue(Place.class);
+                                            firebasePlaces.add(placeValue);
+                                        }
+
+                                        sendingPlacesToFirebase(firebasePlaces, songClickPlaces);
+                                    } else {
+                                        Set<Place> notRepeatedPlaces = new HashSet<>(songClickPlaces);
+
+                                        for (Place valuesToInsert : notRepeatedPlaces) {
+                                            FirebaseDatabase.getInstance().getReference().child("places").push().setValue(valuesToInsert);
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
 
                             //-----------------------------------Update UserSearch
                             FirebaseDatabase.getInstance()
@@ -159,6 +198,16 @@ public class EventsFoundFragment extends Fragment {
                         }
                     }
                 });
+    }
+
+    private void sendingPlacesToFirebase(List<Place> firebasePlaces, List<Place> songClickPlaces){
+        Set<Place> notRepeatedPlaces = new HashSet<>(firebasePlaces);
+
+        for(Place data : notRepeatedPlaces) {
+            if(!songClickPlaces.contains(data)) {
+                FirebaseDatabase.getInstance().getReference().child("places").push().setValue(data);
+            }
+        }
     }
 
     private void getSongClickInformation(String url, final EventsFoundFragment.VolleyCallback callback) {
