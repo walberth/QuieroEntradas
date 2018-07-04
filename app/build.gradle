@@ -40,10 +40,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.0'
     implementation 'com.google.firebase:firebase-messaging:17.0.0'
     implementation 'com.google.firebase:firebase-auth:16.0.1'
-    implementation 'com.firebaseui:firebase-ui-database:4.0.1'
+    implementation 'com.firebaseui:firebase-ui-database:4.1.0'
     implementation 'com.firebaseui:firebase-ui-auth:4.0.1'
     implementation 'com.google.firebase:firebase-storage:16.0.1'
-
     /*Design Reference*/
     implementation 'com.android.support:design:27.1.1'
     /*Circle Image Reference*/
@@ -60,7 +59,6 @@ dependencies {
     implementation 'net.danlew:android.joda:2.9.9.4'
     /*Android Stadistics Chart*/
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
-
     implementation 'com.android.volley:volley:1.0.0'
 
 }
