@@ -47,7 +47,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity android:name=".presentation.ui.Detailsearchlas"/>
         <activity android:name=".presentation.ui.RegisterActivity" />
         <activity android:name=".presentation.ui.MainActivity" android:theme="@style/AppThemeOfficial.NoActionBar"/>
     </application>
