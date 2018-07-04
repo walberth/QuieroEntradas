@@ -1,39 +1,37 @@
 package com.cloudvision.utp.quieroentradas.data.model;
 
-import java.util.Date;
+import com.google.firebase.database.IgnoreExtraProperties;
 
+@IgnoreExtraProperties
 public class CommentPlace {
-    private String uid;
-    private String idPlace;
+    private String idSongClickPlace;
     private String idUser;
     private String messageText;
+    private long dateTimeComment;
 
     public CommentPlace() {
     }
 
-    //TODO: NECESARRY CHANGE
-    public CommentPlace(String uid, String idPlace, String idUser, String messageText) {
-        this.uid = uid;
-        this.idPlace = idPlace;
+    public CommentPlace(String idUser, String messageText, long dateTimeComment) {
         this.idUser = idUser;
         this.messageText = messageText;
-        long dateTimeComment = new Date().getTime();
+        this.dateTimeComment = dateTimeComment;
     }
 
-    public String getUid() {
-        return uid;
+    public String getIdSongclickPlace() {
+        return idSongClickPlace;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
+    public void setIdSongclickPlace(String idSongClickPlace) {
+        this.idSongClickPlace = idSongClickPlace;
     }
 
-    public String getIdPlace() {
-        return idPlace;
+    public long getDateTimeComment() {
+        return dateTimeComment;
     }
 
-    public void setIdPlace(String idPlace) {
-        this.idPlace = idPlace;
+    public void setDateTimeComment(long dateTimeComment) {
+        this.dateTimeComment = dateTimeComment;
     }
 
     public String getIdUser() {

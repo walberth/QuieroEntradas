@@ -1,7 +1,11 @@
 package com.cloudvision.utp.quieroentradas.presentation.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,15 +13,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cloudvision.utp.quieroentradas.R;
-import com.cloudvision.utp.quieroentradas.data.model.EventsFound;
+import com.cloudvision.utp.quieroentradas.domain.model.EventsFound;
+import com.cloudvision.utp.quieroentradas.presentation.ui.fragment.EventsFoundDetailFragment;
 import com.cloudvision.utp.quieroentradas.presentation.ui.helpers.SelectableAdapter;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Walberth Gutierrez Telles on 24,June,2018
@@ -26,6 +31,12 @@ public class EventsFoundAdapter extends SelectableAdapter<EventsFoundAdapter.Vie
     private static final String TAG = "EventsFoundAdapter";
     private Context context;
     private List<EventsFound> eventsFoundList;
+    private String idLocation;
+    private String latitud;
+    private String longitud;
+    private String eventName;
+    private String eventGroup;
+    //private RecyclerView recyclerEventsFound;
 
     public EventsFoundAdapter(RecyclerView recyclerView, List<EventsFound> eventsFoundList, Context context) {
         super(recyclerView);
@@ -35,7 +46,7 @@ public class EventsFoundAdapter extends SelectableAdapter<EventsFoundAdapter.Vie
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.eventsfound, parent,false);
         return new ViewHolder(view);
     }
@@ -43,6 +54,10 @@ public class EventsFoundAdapter extends SelectableAdapter<EventsFoundAdapter.Vie
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.bind(eventsFoundList.get(getItemCount() - 1 - position));
+        holder.getAdapterPosition();
+
+        EventsFound eventsFound = eventsFoundList.get(position);
+        idLocation = eventsFound.getEventLocationId();
     }
 
     @Override
@@ -62,22 +77,42 @@ public class EventsFoundAdapter extends SelectableAdapter<EventsFoundAdapter.Vie
             eventNameFound = itemView.findViewById(R.id.eventNameFound);
             eventLocationFound = itemView.findViewById(R.id.eventLocationFound);
             btnSeeEventFound = itemView.findViewById(R.id.btnSeeEventFound);
+            //recyclerEventsFound = itemView.findViewById(R.id.recyclerEventsFound);
 
             btnSeeEventFound.setOnClickListener(new btnSeeEventFound());
+            /*recyclerEventsFound.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "onClick: TESTING");
+                }
+            });*/
         }
 
         public void bind(EventsFound eventsFound){
             eventNameFound.setText(eventsFound.getEventName());
             eventLocationFound.setText(eventsFound.getEventLocation());
+            idLocation = eventsFound.getEventLocationId();
+            latitud = eventsFound.getLatitud();
+            longitud = eventsFound.getLongitud();
+            eventName = eventsFound.getEventName();
+            eventGroup = eventsFound.getEventGroup();
         }
     }
 
     class btnSeeEventFound implements Button.OnClickListener {
         @Override
         public void onClick(View view) {
-            Toast.makeText(context.getApplicationContext(), "Yo want to review the detail", Toast.LENGTH_LONG).show();
-
-            Log.d(TAG, "onClick: Go to the other fragment");
+            Bundle data = new Bundle();
+            data.putString("idLocation", idLocation);
+            data.putString("latitud", latitud);
+            data.putString("longitud", longitud);
+            data.putString("eventName", eventName);
+            data.putString("eventGroup", eventGroup);
+            android.support.v4.app.FragmentManager fragmentManager = ((AppCompatActivity)context).getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            EventsFoundDetailFragment eventsFoundDetailFragment = new EventsFoundDetailFragment();
+            eventsFoundDetailFragment.setArguments(data);
+            fragmentTransaction.replace(R.id.content, eventsFoundDetailFragment).commit();
         }
     }
 }
