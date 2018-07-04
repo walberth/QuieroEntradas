@@ -23,6 +23,7 @@ public class EventsFoundDetailFragment extends Fragment {
     private String longitud;
     private String eventName;
     private String eventGroup;
+    private String keyEventSearch;
 
     public EventsFoundDetailFragment() {
     }
@@ -36,6 +37,7 @@ public class EventsFoundDetailFragment extends Fragment {
             longitud = mBundle.getString("longitud");
             eventName = mBundle.getString("eventName");
             eventGroup = mBundle.getString("eventGroup");
+            keyEventSearch = mBundle.getString("keyEventSearch");
         }
 
         return inflater.inflate(R.layout.fragment_events_found_detail, container, false);
@@ -49,6 +51,8 @@ public class EventsFoundDetailFragment extends Fragment {
         Button btnMapLocation = view.findViewById(R.id.btnMapLocation);
         btnComments.setOnClickListener(new btnViewComments());
         btnMapLocation.setOnClickListener(new btnViewLocationInMap());
+
+
     }
 
     class btnViewComments implements Button.OnClickListener {

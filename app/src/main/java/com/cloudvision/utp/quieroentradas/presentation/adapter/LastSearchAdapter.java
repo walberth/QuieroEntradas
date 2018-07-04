@@ -1,7 +1,10 @@
 package com.cloudvision.utp.quieroentradas.presentation.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,10 +14,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.bumptech.glide.Glide;
 import com.cloudvision.utp.quieroentradas.R;
 import com.cloudvision.utp.quieroentradas.domain.model.LastSearch;
+import com.cloudvision.utp.quieroentradas.presentation.ui.fragment.LastSearchDetailFragment;
 import com.cloudvision.utp.quieroentradas.presentation.ui.helpers.SelectableAdapter;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -28,6 +33,9 @@ public class LastSearchAdapter  extends SelectableAdapter<LastSearchAdapter.View
     private static final String TAG = "LastSearchAdapter";
     private Context context;
     private List<LastSearch> eventSearchList;
+    private String eventGroupSearch;
+    private String eventTimeSearch;
+    private String keyUserImageSearch;
 
     public LastSearchAdapter(RecyclerView recyclerView, List<LastSearch> eventSearchList, Context context) {
         super(recyclerView);
@@ -57,6 +65,7 @@ public class LastSearchAdapter  extends SelectableAdapter<LastSearchAdapter.View
         private TextView eventName, eventDate;
         private Button btnEventDetail;
 
+
         public ViewHolder(View itemView) {
             super(itemView);
 
@@ -69,17 +78,27 @@ public class LastSearchAdapter  extends SelectableAdapter<LastSearchAdapter.View
         }
 
         public void bind(LastSearch lastSearch){
+            Glide.with(context).load(lastSearch.getPictureSearched()).into(eventImage);
             eventName.setText(lastSearch.getGroupName());
             eventDate.setText(convertTime( Long.parseLong(lastSearch.getDateTimeSearched())));
+            eventTimeSearch = lastSearch.getDateTimeSearched();
+            eventGroupSearch = lastSearch.getGroupName();
+            keyUserImageSearch = lastSearch.getKeyUserImageSearch();
         }
     }
 
     class btnSeeEventDetail implements Button.OnClickListener {
         @Override
         public void onClick(View view) {
-            Toast.makeText(context.getApplicationContext(), "Yo want to review the detail", Toast.LENGTH_LONG).show();
-
-            Log.d(TAG, "onClick: Go to the other fragment");
+            Bundle data = new Bundle();
+            data.putString("eventTimeSearch", convertTime(Long.parseLong(eventTimeSearch)));
+            data.putString("eventGroupSearch", eventGroupSearch);
+            data.putString("keyUserImageSearch", keyUserImageSearch);
+            android.support.v4.app.FragmentManager fragmentManager = ((AppCompatActivity)context).getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            LastSearchDetailFragment lastSearchDetailFragment = new LastSearchDetailFragment();
+            lastSearchDetailFragment.setArguments(data);
+            fragmentTransaction.replace(R.id.content, lastSearchDetailFragment).commit();
         }
     }
 

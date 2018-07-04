@@ -20,6 +20,7 @@ import com.cloudvision.utp.quieroentradas.R;
 import com.cloudvision.utp.quieroentradas.domain.model.EventsFound;
 import com.cloudvision.utp.quieroentradas.presentation.ui.fragment.EventsFoundDetailFragment;
 import com.cloudvision.utp.quieroentradas.presentation.ui.helpers.SelectableAdapter;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 import java.util.Objects;
@@ -36,6 +37,7 @@ public class EventsFoundAdapter extends SelectableAdapter<EventsFoundAdapter.Vie
     private String longitud;
     private String eventName;
     private String eventGroup;
+    private String keyEventSearch;
     //private RecyclerView recyclerEventsFound;
 
     public EventsFoundAdapter(RecyclerView recyclerView, List<EventsFound> eventsFoundList, Context context) {
@@ -96,6 +98,9 @@ public class EventsFoundAdapter extends SelectableAdapter<EventsFoundAdapter.Vie
             longitud = eventsFound.getLongitud();
             eventName = eventsFound.getEventName();
             eventGroup = eventsFound.getEventGroup();
+            keyEventSearch = eventsFound.getEventId();
+
+            FirebaseDatabase.getInstance().getReference().child("eventPlaceFound").push().setValue(eventsFound);
         }
     }
 
@@ -108,6 +113,7 @@ public class EventsFoundAdapter extends SelectableAdapter<EventsFoundAdapter.Vie
             data.putString("longitud", longitud);
             data.putString("eventName", eventName);
             data.putString("eventGroup", eventGroup);
+            data.putString("keyEventSearch", keyEventSearch);
             android.support.v4.app.FragmentManager fragmentManager = ((AppCompatActivity)context).getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             EventsFoundDetailFragment eventsFoundDetailFragment = new EventsFoundDetailFragment();
