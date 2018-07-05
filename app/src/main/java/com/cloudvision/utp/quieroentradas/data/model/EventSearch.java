@@ -16,11 +16,30 @@ public class EventSearch {
     private String groupName;
     private String idEvent;
     private String idPlace;
+    private String latitud;
+    private String longitud;
+    private String placeName;
+    private String placeDirection;
 
     public EventSearch() {
     }
 
-    public EventSearch(String uid, String userSearchKey, String idEvent, String idPlace, String idUser, long dateTimeSearch, String eventName, String eventDate, String eventPicture, String eventDescription, String idLocation, String groupName) {
+    public EventSearch(String uid,
+                       String userSearchKey,
+                       String idEvent,
+                       String idPlace,
+                       String idUser,
+                       long dateTimeSearch,
+                       String eventName,
+                       String eventDate,
+                       String eventPicture,
+                       String eventDescription,
+                       String idLocation,
+                       String groupName,
+                       String latitud,
+                       String longitud,
+                       String placeName,
+                       String placeDirection) {
         this.uid = uid;
         this.idUser = idUser;
         this.dateTimeSearch = dateTimeSearch;
@@ -33,6 +52,42 @@ public class EventSearch {
         this.idPlace = idPlace;
         this.idEvent = idEvent;
         this.userSearchKey = userSearchKey;
+        this.latitud = latitud;
+        this.longitud = longitud;
+        this.placeName = placeName;
+        this.placeDirection = placeDirection;
+    }
+
+    public String getLatitud() {
+        return latitud;
+    }
+
+    public void setLatitud(String latitud) {
+        this.latitud = latitud;
+    }
+
+    public String getLongitud() {
+        return longitud;
+    }
+
+    public void setLongitud(String longitud) {
+        this.longitud = longitud;
+    }
+
+    public String getPlaceName() {
+        return placeName;
+    }
+
+    public void setPlaceName(String placeName) {
+        this.placeName = placeName;
+    }
+
+    public String getPlaceDirection() {
+        return placeDirection;
+    }
+
+    public void setPlaceDirection(String placeDirection) {
+        this.placeDirection = placeDirection;
     }
 
     public String getUid() {
