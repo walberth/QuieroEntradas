@@ -1,5 +1,7 @@
 package com.cloudvision.utp.quieroentradas.data.model;
 
+import android.util.Log;
+
 public class LastSearchdetail {
     private String eventName;
     private String eventLocationidplace;
@@ -25,6 +27,7 @@ public class LastSearchdetail {
         this.setEventDescription(eventDescription);
         this.setEventDate(eventDate);
         this.setEventdateTimeSearch(eventdateTimeSearch);
+
     }
 
 
@@ -102,4 +105,5 @@ public class LastSearchdetail {
     public void setEventdateTimeSearch(Long eventdateTimeSearch) {
         this.eventdateTimeSearch = eventdateTimeSearch;
     }
+
 }

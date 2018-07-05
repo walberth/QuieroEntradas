@@ -36,7 +36,7 @@ public class LastSearchAdapter  extends SelectableAdapter<LastSearchAdapter.View
     private static final String TAG = "LastSearchAdapter";
     private Context context;
     private List<LastSearch> eventSearchList;
-    public String  date, name;
+    public String  date, name, date2;
     private DatabaseReference mFirebaseDatabase = FirebaseDatabase.getInstance().getReference("eventSearch");
     public LastSearchAdapter(RecyclerView recyclerView, List<LastSearch> eventSearchList, Context context) {
         super(recyclerView);
@@ -80,6 +80,8 @@ public class LastSearchAdapter  extends SelectableAdapter<LastSearchAdapter.View
         public void bind(LastSearch lastSearch){
             eventName.setText(lastSearch.getGroupName());
             eventDate.setText(convertTime( Long.parseLong(lastSearch.getDateTimeSearched())));
+            date2 = lastSearch.getDateTimeSearched();
+            name = lastSearch.getGroupName();
         }
     }
 
@@ -87,16 +89,16 @@ public class LastSearchAdapter  extends SelectableAdapter<LastSearchAdapter.View
         @Override
         public void onClick(View view) {
             Toast.makeText(context.getApplicationContext(), "Yo want to review the detail", Toast.LENGTH_LONG).show();
-            Long tiempo= Long.parseLong(date) ;
+           Long time = Long.parseLong(date2);
             Log.d(TAG, "onClick: Go to the other fragment");
-            mFirebaseDatabase.orderByChild("dateTimeSearch").equalTo(tiempo).addListenerForSingleValueEvent(new ValueEventListener()
+           /* mFirebaseDatabase.orderByChild("groupName").equalTo(name).addListenerForSingleValueEvent(new ValueEventListener()
 
-            {
+            {*/
 
-                @Override
+              /*  @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                    if (dataSnapshot.exists()) {
+*/
+                   /* if (dataSnapshot.exists()) {
 
                         Log.d("coment", "ez");
                         // LastSearchdetail lastSearchdetail = snapshot.getValue(LastSearchdetail.class);
@@ -110,42 +112,45 @@ public class LastSearchAdapter  extends SelectableAdapter<LastSearchAdapter.View
                             String eventDescription =  snapshot.child("eventDescription").getValue(String.class);
                             String eventDate =  snapshot.child("eventDate").getValue(String.class);
                             Long eventdateTimeSearch =  snapshot.child("dateTimeSearch").getValue(Long.class);
-                            // final LastSearchdetail searchdetail = new LastSearchdetail( eventName, eventLocationidplace, eventPicture, eventId,eventgroupName, idUser, eventDescription , eventDate, eventdateTimeSearch );
-                            LastSearchdetail lastSearchdetail = new LastSearchdetail(eventName, eventLocationidplace, eventPicture, eventId, eventgroupName, idUser, eventDescription, eventDate,eventdateTimeSearch );
-                       /* LastSearchdetail lastSearchdetail = new LastSearchdetail();
-                        lastSearchdetail.setEventName(eventName);
-                        lastSearchdetail.setEventLocationidplace(eventLocationidplace);
-                        lastSearchdetail.setEventPicture(eventPicture);
-                        lastSearchdetail.setEventId(eventId);
-                        lastSearchdetail.setEventgroupName(eventgroupName);
-                        lastSearchdetail.setIdUser(idUser);
-                        lastSearchdetail.setEventDescription(eventDescription);
-                        lastSearchdetail.setEventDate(eventDate);
-                        lastSearchdetail.setEventdateTimeSearch(eventdateTimeSearch);
-                        ;*/
-                            Log.d( "an_id" , eventDate);
+                          final LastSearchdetail lastSearchdetail = new LastSearchdetail( eventName, eventLocationidplace, eventPicture, eventId,eventgroupName, idUser, eventDescription , eventDate, eventdateTimeSearch );
+                            //private final LastSearchdetail LastSearchdetail = new LastSearchdetail();
+
+                       // LastSearchdetail lastSearchdetail = new LastSearchdetail();
+                          *//*  LastSearchdetail.setEventName(eventName);
+                            LastSearchdetail.setEventLocationidplace(eventLocationidplace);
+                            LastSearchdetail.setEventPicture(eventPicture);
+                            LastSearchdetail.setEventId(eventId);
+                            LastSearchdetail.setEventgroupName(eventgroupName);
+                            LastSearchdetail.setIdUser(idUser);
+                            LastSearchdetail.setEventDescription(eventDescription);
+                            LastSearchdetail.setEventDate(eventDate);
+                            LastSearchdetail.setEventdateTimeSearch(eventdateTimeSearch);*//*
+
+                            Log.d( "an_id" , eventName);*/
+
                             Intent i = new Intent(context, Detailsearchlas.class);
-                            i.putExtra("eventDate", String.valueOf(dataSnapshot.child("groupName").getValue(String.class)));
-                            i.putExtra("eventName",eventgroupName );
+                              i.putExtra("eventName",name );
+                           /* i.putExtra("eventDate", String.valueOf(dataSnapshot.child("groupName").getValue(String.class)));
+
                             i.putExtra("eventlugar",eventLocationidplace );
                             i.putExtra("eventid",eventId );
                             i.putExtra("eventlugar",eventLocationidplace );
 
-
+*/
 
                             context.startActivity(i);
-                        }}else {
+                        /*}}else {
                         Log.d("gg", "gg wp");
-                    }
+                    }*/
 
 
-                }
+               // }
 
-                @Override
+            /*    @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
                 }
-            });
+            });*/
 
 
 
