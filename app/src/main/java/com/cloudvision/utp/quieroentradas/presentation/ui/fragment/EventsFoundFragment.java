@@ -106,7 +106,7 @@ public class EventsFoundFragment extends Fragment {
             }
         }
 
-        getSongClickInformation(URL_WS + /*element.getDescriptionFounded() + */"radiohead",
+        getSongClickInformation(URL_WS + /*element.getDescriptionFounded() + */"radiohead&page=1&per_page=10",
                 new EventsFoundFragment.VolleyCallback(){
                     @Override
                     public void onSuccessResponse(String result) {
@@ -242,10 +242,13 @@ public class EventsFoundFragment extends Fragment {
 
     private void sendingPlacesToFirebase(List<Place> firebasePlaces, List<Place> songClickPlaces){
         Set<Place> notRepeatedPlaces = new HashSet<>(firebasePlaces);
-        List<Place>
+        List<Place> validatePlacesInLocal = new ArrayList<>();
+
         for(Place data : notRepeatedPlaces) {
-            if(!songClickPlaces.contains(data) &&) {
+            if(!songClickPlaces.contains(data) && !validatePlacesInLocal.contains(data)) {
                 FirebaseDatabase.getInstance().getReference().child("places").push().setValue(data);
+
+                validatePlacesInLocal.add(data);
             }
         }
     }
