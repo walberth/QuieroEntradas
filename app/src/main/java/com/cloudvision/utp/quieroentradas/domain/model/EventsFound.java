@@ -16,11 +16,13 @@ public class EventsFound implements Parcelable {
     private String latitud;
     private String longitud;
     private String eventGroup;
+    private String userSearchKey;
 
     public EventsFound() {
     }
 
-    public EventsFound(String eventGroup, String latitud, String longitud, String eventId, String eventSongClickId, String eventLocationId, String eventName, String eventLocation, String eventPicture) {
+    public EventsFound(String userSearchKey, String eventGroup, String latitud, String longitud, String eventId, String eventSongClickId, String eventLocationId, String eventName, String eventLocation, String eventPicture) {
+        this.userSearchKey = userSearchKey;
         this.eventName = eventName;
         this.eventLocation = eventLocation;
         this.eventPicture = eventPicture;
@@ -49,6 +51,14 @@ public class EventsFound implements Parcelable {
             return new EventsFound[size];
         }
     };
+
+    public String getUserSearchKey() {
+        return userSearchKey;
+    }
+
+    public void setUserSearchKey(String userSearchKey) {
+        this.userSearchKey = userSearchKey;
+    }
 
     public String getEventGroup() {
         return eventGroup;

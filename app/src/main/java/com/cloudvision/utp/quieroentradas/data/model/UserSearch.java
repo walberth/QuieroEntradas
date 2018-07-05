@@ -4,19 +4,39 @@ import com.google.firebase.database.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
 public class UserSearch {
+    private String uid;
     private String idUser;
     private String picture;
     private long dateTimeSearch;
     private String groupName;
+    private String imageStorageName;
 
     public UserSearch() {
     }
 
-    public UserSearch(String idUser, String picture, long dateTimeSearch, String groupName) {
+    public UserSearch(String uid, String imageStorageName, String idUser, String picture, long dateTimeSearch, String groupName) {
         this.idUser = idUser;
         this.picture = picture;
         this.dateTimeSearch = dateTimeSearch;
         this.groupName = groupName;
+        this.imageStorageName = imageStorageName;
+        this.uid = uid;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getImageStorageName() {
+        return imageStorageName;
+    }
+
+    public void setImageStorageName(String imageStorageName) {
+        this.imageStorageName = imageStorageName;
     }
 
     public String getIdUser() {

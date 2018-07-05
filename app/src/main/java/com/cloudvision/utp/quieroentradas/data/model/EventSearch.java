@@ -4,7 +4,9 @@ import com.google.firebase.database.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
 public class EventSearch {
+    private String uid;
     private String idUser;
+    private String userSearchKey;
     private long dateTimeSearch;
     private String eventName;
     private String eventDate;
@@ -18,7 +20,8 @@ public class EventSearch {
     public EventSearch() {
     }
 
-    public EventSearch(String idEvent, String idPlace, String idUser, long dateTimeSearch, String eventName, String eventDate, String eventPicture, String eventDescription, String idLocation, String groupName) {
+    public EventSearch(String uid, String userSearchKey, String idEvent, String idPlace, String idUser, long dateTimeSearch, String eventName, String eventDate, String eventPicture, String eventDescription, String idLocation, String groupName) {
+        this.uid = uid;
         this.idUser = idUser;
         this.dateTimeSearch = dateTimeSearch;
         this.eventName = eventName;
@@ -29,6 +32,23 @@ public class EventSearch {
         this.groupName = groupName;
         this.idPlace = idPlace;
         this.idEvent = idEvent;
+        this.userSearchKey = userSearchKey;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getUserSearchKey() {
+        return userSearchKey;
+    }
+
+    public void setUserSearchKey(String userSearchKey) {
+        this.userSearchKey = userSearchKey;
     }
 
     public String getIdEvent() {

@@ -1,5 +1,6 @@
 package com.cloudvision.utp.quieroentradas.presentation.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,12 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.cloudvision.utp.quieroentradas.R;
-import com.cloudvision.utp.quieroentradas.data.datasource.rest.VolleyController;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpTransport;
@@ -48,21 +44,17 @@ import java.util.Objects;
  */
 public class ImageToSendFragment extends Fragment {
     private final static String TAG = "ImageToSendFragment";
+    private final static String WEB_API_TYPE = "WEB_DETECTION";
+    private final static String LOGO_API_TYPE = "LOGO_DETECTION";
     protected String DATA_RECEIVE = "picture";
     private final String CLOUD_VISION_API_KEY = "AIzaSyDv0nRvPmzDpTZayTKW9jLiQvaWl6AvKOc";
     private ProgressBar imageToSendProgressBar;
-    private static String[] visionAPI = new String[]{ "LOGO_DETECTION", "WEB_DETECTION"};
-    private static String API_TYPE = visionAPI[1];
     protected TextView visionInformation;
     private Bitmap bitmapImage;
     private String groupName;
     private String keyUserImageSearch;
 
     public ImageToSendFragment() {
-    }
-
-    public interface VolleyCallback{
-        void onSuccessResponse(String result);
     }
 
     @Override
@@ -85,9 +77,10 @@ public class ImageToSendFragment extends Fragment {
         ImageView imgPicture = view.findViewById(R.id.imgPicture);
         visionInformation = view.findViewById(R.id.visionInformation);
         imageToSendProgressBar =  view.findViewById(R.id.imageToSendProgressBar);
+
         Feature feature = new Feature();
-        feature.setType(API_TYPE);
-        feature.setMaxResults(10);
+        feature.setType(LOGO_API_TYPE);
+        feature.setMaxResults(1);
 
         imgPicture.setImageBitmap(bitmapImage);
         passImageToCloudVision(feature);
@@ -132,6 +125,7 @@ public class ImageToSendFragment extends Fragment {
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     private void callCloudVision(final Bitmap bitmap, final Feature feature) {
         imageToSendProgressBar.setVisibility(View.VISIBLE);
 
@@ -145,14 +139,10 @@ public class ImageToSendFragment extends Fragment {
         annotateImageReq.setImage(getImageEncodeImage(bitmap));
         annotateImageRequests.add(annotateImageReq);
 
-        //TODO: VISION API CALL WITH VOLLEY
-        //wsVisionCallback(annotateImageRequests);
-
         new AsyncTask<Object, Void, String>() {
             @Override
             protected String doInBackground(Object... params) {
                 try {
-
                     HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
                     JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
@@ -169,7 +159,7 @@ public class ImageToSendFragment extends Fragment {
                     Vision.Images.Annotate annotateRequest = vision.images().annotate(batchAnnotateImagesRequest);
                     annotateRequest.setDisableGZipContent(true);
                     BatchAnnotateImagesResponse response = annotateRequest.execute();
-                    return convertResponseToString(response);
+                    return convertResponseToString(response, LOGO_API_TYPE);
                 } catch (GoogleJsonResponseException e) {
                     Log.d(TAG, "failed to make API request because " + e.getContent());
                 } catch (IOException e) {
@@ -178,10 +168,71 @@ public class ImageToSendFragment extends Fragment {
                 return "Cloud Vision API request failed. Check logs for details.";
             }
 
-            protected void onPostExecute(String result) {
-                groupName = result;
-                visionInformation.setText(result);
-                imageToSendProgressBar.setVisibility(View.INVISIBLE);
+            protected void onPostExecute(String logoResult) {
+                Log.d(TAG, "onPostExecute: RESULT OF LOGO VISION API - " + logoResult);
+
+                final List<Feature> featureListWeb = new ArrayList<>();
+                final List<AnnotateImageRequest> annotateImageRequestsWeb = new ArrayList<>();
+                final Feature featureWeb = new Feature();
+                final AnnotateImageRequest annotateImageReqWeb = new AnnotateImageRequest();
+
+
+                if (logoResult.equals("Nothing Found")) {
+                    new AsyncTask<Object, Void, String>() {
+                        @Override
+                        protected void onPreExecute() {
+                            super.onPreExecute();
+
+                            featureWeb.setType(WEB_API_TYPE);
+                            featureWeb.setMaxResults(3);
+                            featureListWeb.add(featureWeb);
+                            annotateImageReqWeb.setFeatures(featureListWeb);
+                            annotateImageReqWeb.setImage(getImageEncodeImage(bitmap));
+                            annotateImageRequestsWeb.add(annotateImageReqWeb);
+                        }
+
+                        @Override
+                        protected String doInBackground(Object... objects) {
+                            try {
+                                HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
+                                JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
+
+                                VisionRequestInitializer requestInitializer = new VisionRequestInitializer(CLOUD_VISION_API_KEY);
+
+                                Vision.Builder builder = new Vision.Builder(httpTransport, jsonFactory, null);
+                                builder.setVisionRequestInitializer(requestInitializer);
+
+                                Vision vision = builder.build();
+
+                                BatchAnnotateImagesRequest batchAnnotateImagesRequest = new BatchAnnotateImagesRequest();
+                                batchAnnotateImagesRequest.setRequests(annotateImageRequestsWeb);
+
+                                Vision.Images.Annotate annotateRequest = vision.images().annotate(batchAnnotateImagesRequest);
+                                annotateRequest.setDisableGZipContent(true);
+                                BatchAnnotateImagesResponse response = annotateRequest.execute();
+                                return convertResponseToString(response, WEB_API_TYPE);
+                            } catch (GoogleJsonResponseException e) {
+                                Log.d(TAG, "failed to make API request because " + e.getContent());
+                            } catch (IOException e) {
+                                Log.d(TAG, "failed to make API request because of other IOException " + e.getMessage());
+                            }
+                            return "Cloud Vision API request failed. Check logs for details.";
+                        }
+
+                        @Override
+                        protected void onPostExecute(String webResult) {
+                            Log.d(TAG, "onPostExecute: RESULT OF WEB VISION API - " + webResult);
+
+                            groupName = webResult;
+                            visionInformation.setText(webResult);
+                            imageToSendProgressBar.setVisibility(View.INVISIBLE);
+                        }
+                    }.execute();
+                } else {
+                    groupName = logoResult;
+                    visionInformation.setText(logoResult);
+                    imageToSendProgressBar.setVisibility(View.INVISIBLE);
+                }
             }
         }.execute();
     }
@@ -196,7 +247,7 @@ public class ImageToSendFragment extends Fragment {
         return base64EncodedImage;
     }
 
-    private static String convertResponseToString(BatchAnnotateImagesResponse response) {
+    private static String convertResponseToString(BatchAnnotateImagesResponse response, String API_TYPE) {
         AnnotateImageResponse imageResponses = response.getResponses().get(0);
         List<EntityAnnotation> entityAnnotations;
         String message = "";
@@ -217,79 +268,31 @@ public class ImageToSendFragment extends Fragment {
     }
 
     private static String getWebDetection(WebDetection webDetection) {
-        String message = "";
-        List<WebEntity> webEntitys = webDetection.getWebEntities();
+        StringBuilder message = new StringBuilder();
+        List<WebEntity> webEntities = webDetection.getWebEntities();
 
-        if (webEntitys !=null) {
-            for (WebEntity entity : webEntitys) {
-                message= message +""+ entity.getDescription() + " : " + entity.getEntityId() + " : "+ entity.getScore();
-
-                message = message + "\n";
+        if (webEntities !=null) {
+            for (WebEntity entity : webEntities) {
+                message.append(entity.getDescription()).append(" : ").append(entity.getScore()).append("\n");
             }
         } else {
-            message = "Nothing Found";
+            message = new StringBuilder("Nothing Found");
         }
 
-        return message;
+        return message.toString();
     }
 
     private static String formatAnnotation(List<EntityAnnotation> entityAnnotation) {
-        String message = "";
+        StringBuilder message = new StringBuilder();
 
         if (entityAnnotation != null) {
             for (EntityAnnotation entity : entityAnnotation) {
-                message = message + "    " + entity.getDescription() + " " + entity.getScore();
-                message += "\n";
+                message.append(entity.getDescription()).append(" : ").append(entity.getScore()).append("\n");
             }
         } else {
-            message = "Nothing Found";
+            message = new StringBuilder("Nothing Found");
         }
 
-        return message;
-    }
-
-    //TODO: CALLING VISION API WITH VOLLEY
-    public void wsVisionCallback(final List<AnnotateImageRequest> annotateRequest) {
-        getVisionInformation(annotateRequest, null, new ImageToSendFragment.VolleyCallback() {
-
-            @Override
-            public void onSuccessResponse(String result) {
-
-            }
-        });
-    }
-
-    //TODO: CALLING VISION API WITH VOLLEY
-    private void getVisionInformation(final List<AnnotateImageRequest> annotateRequest, String url, final VolleyCallback callback) {
-        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    try {
-                        HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
-                        JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
-
-                        VisionRequestInitializer requestInitializer = new VisionRequestInitializer(CLOUD_VISION_API_KEY);
-
-                        Vision.Builder builder = new Vision.Builder(httpTransport, jsonFactory, null);
-                        builder.setVisionRequestInitializer(requestInitializer);
-
-                        Vision vision = builder.build();
-
-
-
-                        callback.onSuccessResponse(response);
-                    } catch (Exception ex) {
-                        Log.e(TAG, "onResponse: error throw " + ex.getMessage());
-                        ex.printStackTrace();
-                    }
-                }
-            },
-            new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.e(TAG, "onErrorResponse: error throw " + error.getMessage());
-                }
-            });
-        VolleyController.getInstance(getActivity()).addToRequestQueue(request);
+        return message.toString();
     }
 }

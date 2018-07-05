@@ -1,6 +1,5 @@
 package com.cloudvision.utp.quieroentradas.presentation.ui.fragment;
 
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,17 +15,14 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.cloudvision.utp.quieroentradas.R;
 import com.cloudvision.utp.quieroentradas.data.model.CommentPlace;
-import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseListOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -38,9 +34,7 @@ import static com.cloudvision.utp.quieroentradas.presentation.ui.MainActivity.us
  */
 public class CommentFragment extends Fragment {
     private static final String TAG = "CommentFragment";
-    private FirebaseListAdapter<CommentPlace> adapter;
     private FirebaseUser user;
-    private FirebaseAuth auth;
     private String idLocation;
     private EditText inputComment;
     private TextView messageText;
@@ -63,7 +57,6 @@ public class CommentFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         FloatingActionButton fab = view.findViewById(R.id.fab);
-        auth = FirebaseAuth.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
         inputComment = view.findViewById(R.id.inputComment);
         listOfMessages = view.findViewById(R.id.listOfMessages);
@@ -111,11 +104,11 @@ public class CommentFragment extends Fragment {
                 .setLifecycleOwner(this)
                 .build();
 
-        adapter = new FirebaseListAdapter<CommentPlace>(options) {
+        FirebaseListAdapter<CommentPlace> adapter = new FirebaseListAdapter<CommentPlace>(options) {
             @Override
             @SuppressLint("SetTextI18n")
             protected void populateView(View view, CommentPlace model, int position) {
-                if(model.getIdSongclickPlace().equals(idLocation)) {
+                if (model.getIdSongclickPlace().equals(idLocation)) {
                     messageText = view.findViewById(R.id.message_text);
                     messageUser = view.findViewById(R.id.message_user);
                     messageTime = view.findViewById(R.id.message_time);
@@ -132,7 +125,7 @@ public class CommentFragment extends Fragment {
 
     public String convertTime(long time){
         Date date = new Date(time);
-        Format format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        @SuppressLint("SimpleDateFormat") Format format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         return format.format(date);
     }
 }
