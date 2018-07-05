@@ -41,6 +41,7 @@ public class CommentFragment extends Fragment {
     private TextView messageUser;
     private TextView messageTime;
     private ListView listOfMessages;
+    private String userFullName;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,6 +61,7 @@ public class CommentFragment extends Fragment {
         user = FirebaseAuth.getInstance().getCurrentUser();
         inputComment = view.findViewById(R.id.inputComment);
         listOfMessages = view.findViewById(R.id.listOfMessages);
+        userFullName = userResponse.getName() + " " + userResponse.getLastName();
 
         if(FirebaseAuth.getInstance().getCurrentUser() == null) {
             Toast.makeText(getActivity(), "Must be redirect to login", Toast.LENGTH_LONG).show();
@@ -74,11 +76,13 @@ public class CommentFragment extends Fragment {
     class sendCommentToFirebase implements Button.OnClickListener {
         @Override
         public void onClick(View view) {
+
             CommentPlace commentPlace = new CommentPlace();
             commentPlace.setMessageText(inputComment.getText().toString());
             commentPlace.setDateTimeComment(new Date().getTime());
             commentPlace.setIdUser(user.getUid());
             commentPlace.setIdSongclickPlace(idLocation);
+            commentPlace.setUserCompleteName(userFullName);
 
             FirebaseDatabase.getInstance().getReference().child("chats").push().setValue(commentPlace);
 
@@ -114,7 +118,7 @@ public class CommentFragment extends Fragment {
                     messageTime = view.findViewById(R.id.message_time);
 
                     messageText.setText(model.getMessageText());
-                    messageUser.setText(userResponse.getName() + " " + userResponse.getLastName());
+                    messageUser.setText(model.getUserCompleteName());
                     messageTime.setText(convertTime(model.getDateTimeComment()));
                 }
             }

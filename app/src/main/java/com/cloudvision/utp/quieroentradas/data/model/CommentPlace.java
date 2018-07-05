@@ -8,14 +8,25 @@ public class CommentPlace {
     private String idUser;
     private String messageText;
     private long dateTimeComment;
+    private String userCompleteName;
 
     public CommentPlace() {
     }
 
-    public CommentPlace(String idUser, String messageText, long dateTimeComment) {
+    public CommentPlace(String idSongClickPlace, String idUser, String messageText, long dateTimeComment, String userCompleteName) {
         this.idUser = idUser;
+        this.idSongClickPlace = idSongClickPlace;
         this.messageText = messageText;
         this.dateTimeComment = dateTimeComment;
+        this.userCompleteName = userCompleteName;
+    }
+
+    public String getUserCompleteName() {
+        return userCompleteName;
+    }
+
+    public void setUserCompleteName(String userCompleteName) {
+        this.userCompleteName = userCompleteName;
     }
 
     public String getIdSongclickPlace() {
