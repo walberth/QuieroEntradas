@@ -100,7 +100,7 @@ public class EventsFoundAdapter extends SelectableAdapter<EventsFoundAdapter.Vie
             eventGroup = eventsFound.getEventGroup();
             keyEventSearch = eventsFound.getEventId();
 
-            FirebaseDatabase.getInstance().getReference().child("eventPlaceFound").push().setValue(eventsFound);
+            //FirebaseDatabase.getInstance().getReference().child("eventPlaceFound").push().setValue(eventsFound);
         }
     }
 

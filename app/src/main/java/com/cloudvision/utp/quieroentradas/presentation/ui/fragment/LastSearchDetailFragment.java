@@ -1,12 +1,14 @@
 package com.cloudvision.utp.quieroentradas.presentation.ui.fragment;
 
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,9 +37,10 @@ import java.util.Objects;
  * Created by Walberth Gutierrez Telles on 02,July,2018
  */
 public class LastSearchDetailFragment extends Fragment {
+    private static final String TAG = "LastSearchDetailFragment";
     private String eventGroup, eventTime, keyUserImageSearch;
     private TextView eventGroupSearch, eventTimeSearch;
-    private List<LastEventSearch> eventSearchList;
+    private List<EventsFound> eventsFoundList;
     private FirebaseUser user;
     private RecyclerView recyclerSearchedEventsFound;
     private LastSearchDetailAdapter lastSearchDetailAdapter;
@@ -62,7 +65,7 @@ public class LastSearchDetailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        eventSearchList = new ArrayList<>();
+        eventsFoundList = new ArrayList<>();
         eventGroupSearch = view.findViewById(R.id.eventGroupSearch);
         eventTimeSearch = view.findViewById(R.id.eventTimeSearch);
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -79,6 +82,7 @@ public class LastSearchDetailFragment extends Fragment {
         DatabaseReference mFirebaseDatabase = mFirebaseInstance.getReference();
 
         mFirebaseDatabase.child("eventSearch").orderByChild("idUser").addChildEventListener(new ChildEventListener() {
+            @SuppressLint("LongLogTag")
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 EventSearch eventSearch = dataSnapshot.getValue(EventSearch.class);
@@ -88,19 +92,26 @@ public class LastSearchDetailFragment extends Fragment {
                         && !eventSearch.getEventName().equals("")
                         && eventSearch.getUserSearchKey().equals(keyUserImageSearch)
                         && eventSearch.getIdUser().equals(user.getUid())) {
-                    final LastEventSearch lastEventSearch = new LastEventSearch();
+                    final EventsFound lastEventsFound = new EventsFound();
 
-                    //TODO: CHANGE WITH MORE ELEMTNS FOR THE FUTURE VIEW
-                    lastEventSearch.setEventName(Objects.requireNonNull(eventSearch).getEventName());
-                    lastEventSearch.setEventPicture(eventSearch.getEventPicture());
+                    lastEventsFound.setLongitud(eventSearch.getLongitud());
+                    lastEventsFound.setLatitud(eventSearch.getLatitud());
+                    lastEventsFound.setEventGroup(eventSearch.getGroupName());
+                    lastEventsFound.setEventName(eventSearch.getEventName());
+                    lastEventsFound.setEventPicture(eventSearch.getEventPicture());
+                    lastEventsFound.setEventLocationId(eventSearch.getIdPlace());
+
+                    if(eventSearch.getIdPlace().equals("922176")) {
+                        Log.d(TAG, "onChildAdded: HOLA" + eventSearch.getEventName());
+                    }
 
 
-                    eventSearchList.add(lastEventSearch);
-                    lastSearchDetailAdapter = new LastSearchDetailAdapter(recyclerSearchedEventsFound, eventSearchList, getContext());
-                    recyclerSearchedEventsFound.setHasFixedSize(true);
-                    recyclerSearchedEventsFound.setAdapter(lastSearchDetailAdapter);
-                    //lastSearchDetailAdapter.notifyDataSetChanged();
+                    eventsFoundList.add(lastEventsFound);
                 }
+
+                lastSearchDetailAdapter = new LastSearchDetailAdapter(recyclerSearchedEventsFound, eventsFoundList, getContext());
+                recyclerSearchedEventsFound.setHasFixedSize(true);
+                recyclerSearchedEventsFound.setAdapter(lastSearchDetailAdapter);
             }
 
             @Override

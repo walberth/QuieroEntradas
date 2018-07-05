@@ -91,7 +91,7 @@ public class EventsFoundFragment extends Fragment {
         //for(CloudVisionElement element : cloudVisionElementList) {
             //Log.d(TAG, "wsSongClickCallback: ELEMENT SENDED " + element.getDescriptionFounded() + " with score " + element.getScoreFounded());
 
-            progressBarEventsFound.setVisibility(View.VISIBLE);
+        progressBarEventsFound.setVisibility(View.VISIBLE);
         //TODO: PROBE FOR LOGO ELEMENT
         if(groupName != null) {
             String[] elements = groupName.split("\n");
@@ -106,130 +106,149 @@ public class EventsFoundFragment extends Fragment {
             }
         }
 
-            getSongClickInformation(URL_WS + /*element.getDescriptionFounded() + */"radiohead",
-                    new EventsFoundFragment.VolleyCallback(){
-                        @Override
-                        public void onSuccessResponse(String result) {
-                            try {
-                                String groupName = null;
-                                JSONArray jsonArray = new JSONObject(result).getJSONObject("resultsPage").getJSONObject("results").getJSONArray("event");
-                                final List<Place> songClickPlaces = new ArrayList<>();
+        getSongClickInformation(URL_WS + /*element.getDescriptionFounded() + */"radiohead&page=1&per_page=10",
+                new EventsFoundFragment.VolleyCallback(){
+                    @Override
+                    public void onSuccessResponse(String result) {
+                        try {
+                            String groupName = null;
+                            JSONArray jsonArray = new JSONObject(result).getJSONObject("resultsPage").getJSONObject("results").getJSONArray("event");
+                            final List<Place> songClickPlaces = new ArrayList<>();
+                            final Set<String> idPlacesNotRepeatedList;
+                            final List<String> idPlaceList = new ArrayList<>();
 
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    final JSONObject childObject = jsonArray.getJSONObject(i);
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                final JSONObject locationChildObject = jsonArray.getJSONObject(i);
+                                idPlaceList.add(locationChildObject.optJSONObject("venue").optString("id"));
+                            }
 
-                                    JSONArray performanceArray = childObject.optJSONArray("performance");
+                            idPlacesNotRepeatedList = new HashSet<>(idPlaceList);
 
-                                    for (int j = 0; j < performanceArray.length(); j++) {
-                                        JSONObject performaceValues = performanceArray.getJSONObject(j);
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                final JSONObject childObject = jsonArray.getJSONObject(i);
 
-                                        groupName = performaceValues.optString("displayName");
-                                    }
-                                    //-----------------------------------EventSearch
-                                    final String keyEventSearch = FirebaseDatabase.getInstance().getReference().child("eventSearch").push().getKey();
+                                JSONArray performanceArray = childObject.optJSONArray("performance");
 
-                                    EventSearch eventSearch = new EventSearch();
-                                    eventSearch.setIdUser(user.getUid());
-                                    eventSearch.setDateTimeSearch(new Date().getTime());
-                                    eventSearch.setEventName(childObject.optString("displayName"));
-                                    eventSearch.setEventDate(childObject.optJSONObject("start").optString("date"));
-                                    eventSearch.setEventPicture("picture here");
-                                    eventSearch.setEventDescription(childObject.optString("displayName"));
-                                    eventSearch.setGroupName(groupName);
-                                    eventSearch.setIdPlace(childObject.optJSONObject("venue").optString("id"));
-                                    eventSearch.setIdEvent(childObject.optString("id"));
-                                    eventSearch.setUserSearchKey(keyUserImageSearch);
-                                    eventSearch.setUid(keyEventSearch);
+                                for (int j = 0; j < performanceArray.length(); j++) {
+                                    JSONObject performaceValues = performanceArray.getJSONObject(j);
 
-                                    /*Sending to firebase the eventSearchs*/
-                                    FirebaseDatabase.getInstance().getReference().child("eventSearch").child(Objects.requireNonNull(keyEventSearch)).setValue(eventSearch);
-
-                                    //------------------------------------Places
-                                    Place place = new Place();
-                                    place.setName(childObject.optJSONObject("venue").optString("displayName"));
-
-                                    //Get the location
-                                    String locationDisplayName = childObject.optJSONObject("venue").optJSONObject("metroArea").optString("displayName");
-                                    String countryDisplayName = childObject.optJSONObject("venue").optJSONObject("metroArea").optJSONObject("country").optString("displayName");
-                                    String location = locationDisplayName + ", " + countryDisplayName;
-
-                                    place.setDirection(location);
-                                    place.setLatitud(childObject.optJSONObject("venue").optString("lat"));
-                                    place.setLongitud(childObject.optJSONObject("venue").optString("lng"));
-                                    place.setUid(childObject.optJSONObject("venue").optString("id"));
-                                    songClickPlaces.add(place);
-
-                                    //--------------------------------------EventsFound
-                                    EventsFound eventsFound = new EventsFound();
-                                    eventsFound.setEventName(eventSearch.getEventName());
-                                    eventsFound.setEventLocation(place.getDirection());
-                                    eventsFound.setEventId(keyEventSearch);
-                                    eventsFound.setEventSongClickId(childObject.optString("id"));
-                                    eventsFound.setEventLocationId(childObject.optJSONObject("venue").optString("id"));
-                                    eventsFound.setEventPicture("PICTURE SOMEWHERE");
-                                    eventsFound.setLatitud(childObject.optJSONObject("venue").optString("lat"));
-                                    eventsFound.setLongitud(childObject.optJSONObject("venue").optString("lng"));
-                                    eventsFound.setEventGroup(groupName);
-                                    eventsFound.setUserSearchKey();
-                                    eventsFoundList.add(eventsFound);
+                                    groupName = performaceValues.optString("displayName");
                                 }
 
-                                //-----------------------------------Inserting Places
-                                final List<Place> firebasePlaces = new ArrayList<>();
+                                //Get the direction
+                                String locationDisplayName = childObject.optJSONObject("venue").optJSONObject("metroArea").optString("displayName");
+                                String countryDisplayName = childObject.optJSONObject("venue").optJSONObject("metroArea").optJSONObject("country").optString("displayName");
+                                String direction = locationDisplayName + ", " + countryDisplayName;
 
-                                FirebaseDatabase.getInstance().getReference().child("places").orderByChild("uid").addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        if(dataSnapshot.getValue() != null) {
-                                            for (DataSnapshot data : dataSnapshot.getChildren()) {
-                                                Place placeValue = data.getValue(Place.class);
-                                                firebasePlaces.add(placeValue);
-                                            }
+                                /*NEW IMPLEMENTATION*/
+                                //-----------------------------------EventSearch
+                                final String idEvent = FirebaseDatabase.getInstance().getReference().child("eventSearch").push().getKey();
 
-                                            sendingPlacesToFirebase(firebasePlaces, songClickPlaces);
-                                        } else {
-                                            Set<Place> notRepeatedPlaces = new HashSet<>(songClickPlaces);
+                                EventSearch eventSearch = new EventSearch();
+                                eventSearch.setIdUser(user.getUid());
+                                eventSearch.setDateTimeSearch(new Date().getTime());
+                                eventSearch.setEventName(childObject.optString("displayName"));
+                                eventSearch.setEventDate(childObject.optJSONObject("start").optString("date"));
+                                eventSearch.setEventPicture("picture here");
+                                eventSearch.setEventDescription(childObject.optString("displayName"));
+                                eventSearch.setGroupName(groupName);
+                                eventSearch.setUid(idEvent);
+                                eventSearch.setIdEvent(childObject.optString("id"));
+                                eventSearch.setUserSearchKey(keyUserImageSearch);
 
-                                            for (Place valuesToInsert : notRepeatedPlaces) {
-                                                FirebaseDatabase.getInstance().getReference().child("places").push().setValue(valuesToInsert);
-                                            }
+                                if(idPlacesNotRepeatedList.contains(childObject.optJSONObject("venue").optString("id"))) {
+                                    eventSearch.setIdPlace(childObject.optJSONObject("venue").optString("id"));
+                                    eventSearch.setLatitud(childObject.optJSONObject("venue").optString("lat"));
+                                    eventSearch.setLongitud(childObject.optJSONObject("venue").optString("lng"));
+                                    eventSearch.setPlaceName(childObject.optJSONObject("venue").optString("displayName"));
+                                    eventSearch.setPlaceDirection(direction);
+                                }
+
+                                FirebaseDatabase.getInstance().getReference().child("eventSearch").child(Objects.requireNonNull(idEvent)).setValue(eventSearch);
+
+                                //------------------------------------Places
+                                Place place = new Place();
+                                place.setName(childObject.optJSONObject("venue").optString("displayName"));
+                                place.setDirection(direction);
+                                place.setLatitud(childObject.optJSONObject("venue").optString("lat"));
+                                place.setLongitud(childObject.optJSONObject("venue").optString("lng"));
+                                place.setUid(childObject.optJSONObject("venue").optString("id"));
+                                songClickPlaces.add(place);
+
+                                //--------------------------------------EventsFound
+                                EventsFound eventsFound = new EventsFound();
+                                eventsFound.setEventName(eventSearch.getEventName());
+                                eventsFound.setEventLocation(place.getDirection());
+                                eventsFound.setEventId(idEvent);
+                                eventsFound.setEventSongClickId(childObject.optString("id"));
+                                eventsFound.setEventLocationId(childObject.optJSONObject("venue").optString("id"));
+                                eventsFound.setEventPicture("PICTURE SOMEWHERE");
+                                eventsFound.setLatitud(childObject.optJSONObject("venue").optString("lat"));
+                                eventsFound.setLongitud(childObject.optJSONObject("venue").optString("lng"));
+                                eventsFound.setEventGroup(groupName);
+                               // eventsFound.setUserSearchKey();
+                                eventsFoundList.add(eventsFound);
+                            }
+
+                            //-----------------------------------Inserting Places
+                            final List<Place> firebasePlaces = new ArrayList<>();
+
+                            FirebaseDatabase.getInstance().getReference().child("places").orderByChild("uid").addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if(dataSnapshot.getValue() != null) {
+                                        for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                            Place placeValue = data.getValue(Place.class);
+                                            firebasePlaces.add(placeValue);
+                                        }
+
+                                        sendingPlacesToFirebase(firebasePlaces, songClickPlaces);
+                                    } else {
+                                        Set<Place> notRepeatedPlaces = new HashSet<>(songClickPlaces);
+
+                                        for (Place valuesToInsert : notRepeatedPlaces) {
+                                            FirebaseDatabase.getInstance().getReference().child("places").push().setValue(valuesToInsert);
                                         }
                                     }
+                                }
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                                    }
-                                });
+                                }
+                            });
 
-                                //-----------------------------------Update UserSearch
-                                FirebaseDatabase.getInstance()
-                                        .getReference()
-                                        .child("userSearch")
-                                        .child(Objects.requireNonNull(keyUserImageSearch))
-                                        .child("groupName")
-                                        .setValue(groupName);
+                            //-----------------------------------Update UserSearch
+                            FirebaseDatabase.getInstance()
+                                    .getReference()
+                                    .child("userSearch")
+                                    .child(Objects.requireNonNull(keyUserImageSearch))
+                                    .child("groupName")
+                                    .setValue(groupName);
 
-                                eventsFoundAdapter = new EventsFoundAdapter(recyclerEventsFound, eventsFoundList, getContext());
-                                recyclerEventsFound.setHasFixedSize(true);
-                                recyclerEventsFound.setAdapter(eventsFoundAdapter);
+                            eventsFoundAdapter = new EventsFoundAdapter(recyclerEventsFound, eventsFoundList, getContext());
+                            recyclerEventsFound.setHasFixedSize(true);
+                            recyclerEventsFound.setAdapter(eventsFoundAdapter);
 
-                                progressBarEventsFound.setVisibility(View.GONE);
-                            } catch (JSONException ex) {
-                                Log.e(TAG, "onSuccessResponse: error " + ex.getMessage());
-                                ex.printStackTrace();
-                            }
+                            progressBarEventsFound.setVisibility(View.GONE);
+                        } catch (JSONException ex) {
+                            Log.e(TAG, "onSuccessResponse: error " + ex.getMessage());
+                            ex.printStackTrace();
                         }
-                    });
-        //}
+                    }
+                });
+    //}
     }
 
     private void sendingPlacesToFirebase(List<Place> firebasePlaces, List<Place> songClickPlaces){
         Set<Place> notRepeatedPlaces = new HashSet<>(firebasePlaces);
+        List<Place> validatePlacesInLocal = new ArrayList<>();
 
         for(Place data : notRepeatedPlaces) {
-            if(!songClickPlaces.contains(data)) {
+            if(!songClickPlaces.contains(data) && !validatePlacesInLocal.contains(data)) {
                 FirebaseDatabase.getInstance().getReference().child("places").push().setValue(data);
+
+                validatePlacesInLocal.add(data);
             }
         }
     }
