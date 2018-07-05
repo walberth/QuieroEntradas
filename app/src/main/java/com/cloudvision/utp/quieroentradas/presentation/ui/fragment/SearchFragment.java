@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-
 import com.cloudvision.utp.quieroentradas.R;
 import com.cloudvision.utp.quieroentradas.presentation.adapter.SearchAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,54 +23,51 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Created by Ronald Estela on 07,June,2018
  */
 public class SearchFragment extends Fragment {
-    private EditText search_edit_text;
     private RecyclerView recyclerView;
     private DatabaseReference databaseReference;
-    private FirebaseUser firebaseEvent;
     private ArrayList<String> descriptionlist;
     private ArrayList<String> imagelist;
     private ArrayList<String> namelist;
-    private ArrayList<String> statuslist;
+    private ArrayList<String> eventTimeList;
     private SearchAdapter searchAdapter;
+    private FirebaseUser user;
 
     public SearchFragment() {
-        // Required empty public constructor
     }
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_search, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getActivity().setTitle(getResources().getString(R.string.nav_item_search));
-        search_edit_text= view.findViewById(R.id.searchedit);
+        Objects.requireNonNull(getActivity()).setTitle(getResources().getString(R.string.nav_item_search));
+        EditText searchEditText = view.findViewById(R.id.searchedit);
         recyclerView=  view.findViewById(R.id.list);
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
-        firebaseEvent = FirebaseAuth.getInstance().getCurrentUser();
+        user = FirebaseAuth.getInstance().getCurrentUser();
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+        recyclerView.addItemDecoration(new DividerItemDecoration(Objects.requireNonNull(getContext()), LinearLayoutManager.VERTICAL));
 
         descriptionlist = new ArrayList<>();
         imagelist = new ArrayList<>();
         namelist = new ArrayList<>();
-        statuslist = new ArrayList<>();
+        eventTimeList = new ArrayList<>();
 
-        search_edit_text.addTextChangedListener(new TextWatcher() {
+        searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -90,7 +86,7 @@ public class SearchFragment extends Fragment {
                     descriptionlist.clear();
                     imagelist.clear();
                     namelist.clear();
-                    statuslist.clear();
+                    eventTimeList.clear();
                     recyclerView.removeAllViews();}
             }
         });
@@ -98,44 +94,45 @@ public class SearchFragment extends Fragment {
 
     public void setAdapter(final String searchstring) {
 
-        databaseReference.child("events").addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.child("eventSearch").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // se limpia la vista cada vez que se realiza una busqueda
-
                 descriptionlist.clear();
                 imagelist.clear();
                 namelist.clear();
-                statuslist.clear();
+                eventTimeList.clear();
                 recyclerView.removeAllViews();
                 int counter = 0;
 
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()){
-                    String uid = snapshot.getKey();
-                    String description =  snapshot.child("description").getValue(String.class);
-                    String image =  snapshot.child("image").getValue(String.class);
-                    String name =  snapshot.child("name").getValue(String.class);
-                    String status =  snapshot.child("status").getValue(String.class);
 
-                    if (description.toLowerCase().contains(searchstring.toLowerCase())){
-                        descriptionlist.add(description);
+                    String[] description = Objects.requireNonNull(snapshot.child("eventDescription").getValue(String.class)).split("\\(");
+
+                    String cleanDescription = description[0];
+                    String image = snapshot.child("eventPicture").getValue(String.class);
+                    String name = snapshot.child("groupName").getValue(String.class);
+                    String eventTime = snapshot.child("eventDate").getValue(String.class);
+
+                    if (Objects.requireNonNull(cleanDescription).toLowerCase().contains(searchstring.toLowerCase())
+                            && user.getUid().equals(snapshot.child("idUser").getValue(String.class))){
+                        descriptionlist.add(cleanDescription);
                         imagelist.add(image);
                         namelist.add(name);
-                        statuslist.add(status);
+                        eventTimeList.add(eventTime);
                         counter++;
 
-                    } else  if (name.toLowerCase().contains(searchstring.toLowerCase())){
-                        descriptionlist.add(description);
+                    } else  if (Objects.requireNonNull(name).toLowerCase().contains(searchstring.toLowerCase())){
+                        descriptionlist.add(cleanDescription);
                         imagelist.add(image);
                         namelist.add(name);
-                        statuslist.add(status);
+                        eventTimeList.add(eventTime);
                         counter++;
                     }
-                    if (counter == 15)
+                    if (counter == 10)
                         break;
                 }
 
-                searchAdapter = new SearchAdapter(getContext(), descriptionlist, imagelist, namelist, statuslist);
+                searchAdapter = new SearchAdapter(getContext(), descriptionlist, imagelist, namelist, eventTimeList);
                 recyclerView.setAdapter(searchAdapter);
             }
 

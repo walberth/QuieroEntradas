@@ -1,6 +1,7 @@
 package com.cloudvision.utp.quieroentradas.presentation.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,43 +23,45 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     private ArrayList<String> descriptionlist;
     private ArrayList<String> imagelist;
     private ArrayList<String> namelist;
-    private ArrayList<String> statuslist;
+    private ArrayList<String> eventTimeList;
 
     class SearchViewHolder extends  RecyclerView.ViewHolder{
-        ImageView eventimage;
-        TextView description, name, status;
-        public SearchViewHolder(View itemView) {
+        ImageView eventImage;
+        TextView description, name, eventTime;
+
+        SearchViewHolder(View itemView) {
             super(itemView);
-            eventimage= (ImageView) itemView.findViewById(R.id.imageView2);
-            description= (TextView) itemView.findViewById(R.id.textView2);
-            name= (TextView) itemView.findViewById(R.id.textView3);
-            status= (TextView) itemView.findViewById(R.id.textView4);
+            eventImage = itemView.findViewById(R.id.imgPictureSearched);
+            description = itemView.findViewById(R.id.eventDescription);
+            name = itemView.findViewById(R.id.eventArtistName);
+            eventTime = itemView.findViewById(R.id.eventTime);
 
         }
     }
 
-    public SearchAdapter(Context context, ArrayList<String> descriptionlist, ArrayList<String> imagelist, ArrayList<String> namelist, ArrayList<String> statuslist) {
+    public SearchAdapter(Context context, ArrayList<String> descriptionlist, ArrayList<String> imagelist, ArrayList<String> namelist, ArrayList<String> eventTimeList) {
         this.context = context;
         this.descriptionlist = descriptionlist;
         this.imagelist = imagelist;
         this.namelist = namelist;
-        this.statuslist = statuslist;
+        this.eventTimeList = eventTimeList;
     }
 
+    @NonNull
     @Override
-    public SearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SearchViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.searchitems, parent, false);
         return new SearchViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder( SearchViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull SearchViewHolder holder, int position) {
 
         holder.description.setText(descriptionlist.get(position));
         holder.name.setText(namelist.get(position));
-        holder.status.setText(statuslist.get(position));
-        Glide.with(context).load(imagelist.get(position)).apply(new RequestOptions().placeholder(R.mipmap.ic_launcher_round)).into(holder.eventimage);
-        //  Glide.with(context).asBitmap().load(imagelist.get(position)).placeholder(R.mipmap.ic_launcher_round).into(holder.eventimage);
+        holder.eventTime.setText(eventTimeList.get(position));
+        //Glide.with(context).load(imagelist.get(position)).apply(new RequestOptions().placeholder(R.mipmap.ic_launcher_round)).into(holder.eventImage);
+        //  Glide.with(context).asBitmap().load(imagelist.get(position)).placeholder(R.mipmap.ic_launcher_round).into(holder.eventImage);
     }
 
     @Override
