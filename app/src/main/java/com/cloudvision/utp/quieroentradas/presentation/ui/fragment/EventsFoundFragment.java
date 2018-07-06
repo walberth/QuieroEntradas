@@ -33,6 +33,8 @@ import com.google.firebase.database.ValueEventListener;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -84,14 +86,6 @@ public class EventsFoundFragment extends Fragment {
         cloudVisionElementList = new ArrayList<>();
         recyclerEventsFound.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        wsSongClickCallback();
-    }
-
-    public void wsSongClickCallback() {
-        //for(CloudVisionElement element : cloudVisionElementList) {
-            //Log.d(TAG, "wsSongClickCallback: ELEMENT SENDED " + element.getDescriptionFounded() + " with score " + element.getScoreFounded());
-
-        progressBarEventsFound.setVisibility(View.VISIBLE);
         //TODO: PROBE FOR LOGO ELEMENT
         if(groupName != null) {
             String[] elements = groupName.split("\n");
@@ -106,7 +100,23 @@ public class EventsFoundFragment extends Fragment {
             }
         }
 
-        getSongClickInformation(URL_WS + /*element.getDescriptionFounded() + */"radiohead&page=1&per_page=10",
+        wsSongClickCallback();
+    }
+
+    public static String stripAccents(String input){
+        return input == null ? null :
+                Normalizer.normalize(input, Normalizer.Form.NFD)
+                        .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+    }
+
+    public void wsSongClickCallback() {
+        //for(CloudVisionElement element : cloudVisionElementList) {
+            //Log.d(TAG, "wsSongClickCallback: ELEMENT SENDED " + element.getDescriptionFounded() + " with score " + element.getScoreFounded());
+
+        progressBarEventsFound.setVisibility(View.VISIBLE);
+
+
+        getSongClickInformation(URL_WS /*+ stripAccents(element.getDescriptionFounded())*/ + "radiohead&page=1&per_page=10",
                 new EventsFoundFragment.VolleyCallback(){
                     @Override
                     public void onSuccessResponse(String result) {
