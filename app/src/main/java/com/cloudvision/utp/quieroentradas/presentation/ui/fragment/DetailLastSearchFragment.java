@@ -1,4 +1,7 @@
 package com.cloudvision.utp.quieroentradas.presentation.ui.fragment;
 
-public class DetailLastSearchFragment {
+import android.support.v4.app.Fragment;
+
+public class DetailLastSearchFragment extends Fragment {
+
 }
