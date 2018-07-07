@@ -53,6 +53,7 @@ public class LastSearchAdapter  extends SelectableAdapter<LastSearchAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.bind(eventSearchList.get(getItemCount() - 1 - position));
+        holder.getAdapterPosition();
     }
 
     @Override

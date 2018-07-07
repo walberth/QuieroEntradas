@@ -191,6 +191,8 @@ public class EventsFoundFragment extends Fragment {
                                     eventsFound.setLatitud(childObject.optJSONObject("venue").optString("lat"));
                                     eventsFound.setLongitud(childObject.optJSONObject("venue").optString("lng"));
                                     eventsFound.setEventGroup(groupName);
+                                    eventsFound.setEventPlaceDescription(direction);
+                                    eventsFound.setEventDescription(childObject.optString("displayName"));
                                    // eventsFound.setUserSearchKey();
                                     eventsFoundList.add(eventsFound);
                                 }

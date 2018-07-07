@@ -19,6 +19,8 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,6 +44,7 @@ public class StadisticFragment extends Fragment {
     private ArrayList<PieEntry> pieEntries;
     private RecyclerView stadisticsRecyclerView;
     private StadisticAdapter stadisticAdapter;
+    private FirebaseUser user;
 
     public StadisticFragment() {
         // Required empty public constructor
@@ -61,6 +64,7 @@ public class StadisticFragment extends Fragment {
         Objects.requireNonNull(getActivity()).setTitle(getResources().getString(R.string.nav_item_ranking));
         databaseReference = FirebaseDatabase.getInstance().getReference();
         pieEntries = new ArrayList<>();
+        user = FirebaseAuth.getInstance().getCurrentUser();
         stadisticsRecyclerView = view.findViewById(R.id.stadisticsRecyclerView);
         stadisticsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -71,12 +75,12 @@ public class StadisticFragment extends Fragment {
               public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                   Set<String> totalGroups = new HashSet<>();
                   List<String> totalEvents = new ArrayList<>();
-                  int counterElements = 0;
 
                   for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
-                      totalGroups.add(snapshot.child("groupName").getValue(String.class));
-                      totalEvents.add(snapshot.child("groupName").getValue(String.class));
-                      counterElements++;
+                      if(snapshot.child("idUser").getValue(String.class).equals(user.getUid())) {
+                          totalGroups.add(snapshot.child("groupName").getValue(String.class));
+                          totalEvents.add(snapshot.child("groupName").getValue(String.class));
+                      }
                   }
 
                   for(String names : totalGroups) {

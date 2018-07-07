@@ -1,29 +1,22 @@
 package com.cloudvision.utp.quieroentradas.presentation.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.cloudvision.utp.quieroentradas.R;
 import com.cloudvision.utp.quieroentradas.domain.model.EventsFound;
 import com.cloudvision.utp.quieroentradas.presentation.ui.fragment.EventsFoundDetailFragment;
 import com.cloudvision.utp.quieroentradas.presentation.ui.helpers.SelectableAdapter;
-import com.google.firebase.database.FirebaseDatabase;
-
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by Walberth Gutierrez Telles on 24,June,2018
@@ -38,7 +31,8 @@ public class EventsFoundAdapter extends SelectableAdapter<EventsFoundAdapter.Vie
     private String eventName;
     private String eventGroup;
     private String keyEventSearch;
-    //private RecyclerView recyclerEventsFound;
+    private String eventPlaceDescription;
+    private String eventDescription;
 
     public EventsFoundAdapter(RecyclerView recyclerView, List<EventsFound> eventsFoundList, Context context) {
         super(recyclerView);
@@ -57,9 +51,6 @@ public class EventsFoundAdapter extends SelectableAdapter<EventsFoundAdapter.Vie
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.bind(eventsFoundList.get(getItemCount() - 1 - position));
         holder.getAdapterPosition();
-
-        //EventsFound eventsFound = eventsFoundList.get(position);
-        //idLocation = eventsFound.getEventLocationId();
     }
 
     @Override
@@ -79,15 +70,8 @@ public class EventsFoundAdapter extends SelectableAdapter<EventsFoundAdapter.Vie
             eventNameFound = itemView.findViewById(R.id.eventNameFound);
             eventLocationFound = itemView.findViewById(R.id.eventLocationFound);
             btnSeeEventFound = itemView.findViewById(R.id.btnSeeEventFound);
-            //recyclerEventsFound = itemView.findViewById(R.id.recyclerEventsFound);
 
             btnSeeEventFound.setOnClickListener(new btnSeeEventFound());
-            /*recyclerEventsFound.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG, "onClick: TESTING");
-                }
-            });*/
         }
 
         public void bind(EventsFound eventsFound){
@@ -99,8 +83,8 @@ public class EventsFoundAdapter extends SelectableAdapter<EventsFoundAdapter.Vie
             eventName = eventsFound.getEventName();
             eventGroup = eventsFound.getEventGroup();
             keyEventSearch = eventsFound.getEventId();
-
-            //FirebaseDatabase.getInstance().getReference().child("eventPlaceFound").push().setValue(eventsFound);
+            eventPlaceDescription = eventsFound.getEventPlaceDescription();
+            eventDescription = eventsFound.getEventDescription();
         }
     }
 
@@ -114,6 +98,8 @@ public class EventsFoundAdapter extends SelectableAdapter<EventsFoundAdapter.Vie
             data.putString("eventName", eventName);
             data.putString("eventGroup", eventGroup);
             data.putString("keyEventSearch", keyEventSearch);
+            data.putString("eventPlaceDescription", eventPlaceDescription);
+            data.putString("eventDescription", eventDescription);
             android.support.v4.app.FragmentManager fragmentManager = ((AppCompatActivity)context).getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             EventsFoundDetailFragment eventsFoundDetailFragment = new EventsFoundDetailFragment();

@@ -10,6 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.cloudvision.utp.quieroentradas.R;
 import java.util.Objects;
 
@@ -23,7 +26,11 @@ public class EventsFoundDetailFragment extends Fragment {
     private String longitud;
     private String eventName;
     private String eventGroup;
-    private String keyEventSearch;
+    private String eventPlaceDescription;
+    private String eventDescription;
+    private ImageView imgDetailEventFound;
+    private TextView txtEventPlaceDescription, txtEventDescription;
+    //private String keyEventSearch;
 
     public EventsFoundDetailFragment() {
     }
@@ -37,7 +44,9 @@ public class EventsFoundDetailFragment extends Fragment {
             longitud = mBundle.getString("longitud");
             eventName = mBundle.getString("eventName");
             eventGroup = mBundle.getString("eventGroup");
-            keyEventSearch = mBundle.getString("keyEventSearch");
+            //keyEventSearch = mBundle.getString("keyEventSearch");
+            eventPlaceDescription = mBundle.getString("eventPlaceDescription");
+            eventDescription = mBundle.getString("eventDescription");
         }
 
         return inflater.inflate(R.layout.fragment_events_found_detail, container, false);
@@ -47,12 +56,17 @@ public class EventsFoundDetailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        imgDetailEventFound = view.findViewById(R.id.imgDetailEventFound);
+        txtEventPlaceDescription = view.findViewById(R.id.txtEventPlaceDescription);
+        txtEventDescription = view.findViewById(R.id.txtEventDescription);
         Button btnComments = view.findViewById(R.id.btnComments);
         Button btnMapLocation = view.findViewById(R.id.btnMapLocation);
+
+        txtEventPlaceDescription.setText(eventPlaceDescription);
+        txtEventDescription.setText(eventDescription);
+
         btnComments.setOnClickListener(new btnViewComments());
         btnMapLocation.setOnClickListener(new btnViewLocationInMap());
-
-
     }
 
     class btnViewComments implements Button.OnClickListener {

@@ -101,11 +101,6 @@ public class LastSearchDetailFragment extends Fragment {
                     lastEventsFound.setEventPicture(eventSearch.getEventPicture());
                     lastEventsFound.setEventLocationId(eventSearch.getIdPlace());
 
-                    if(eventSearch.getIdPlace().equals("922176")) {
-                        Log.d(TAG, "onChildAdded: HOLA" + eventSearch.getEventName());
-                    }
-
-
                     eventsFoundList.add(lastEventsFound);
                 }
 
