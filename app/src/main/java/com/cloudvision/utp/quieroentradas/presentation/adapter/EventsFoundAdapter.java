@@ -58,8 +58,8 @@ public class EventsFoundAdapter extends SelectableAdapter<EventsFoundAdapter.Vie
         holder.bind(eventsFoundList.get(getItemCount() - 1 - position));
         holder.getAdapterPosition();
 
-        EventsFound eventsFound = eventsFoundList.get(position);
-        idLocation = eventsFound.getEventLocationId();
+        //EventsFound eventsFound = eventsFoundList.get(position);
+        //idLocation = eventsFound.getEventLocationId();
     }
 
     @Override

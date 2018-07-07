@@ -6,11 +6,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.cloudvision.utp.quieroentradas.R;
+import com.cloudvision.utp.quieroentradas.presentation.adapter.StadisticAdapter;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -35,8 +38,10 @@ import static java.util.Collections.frequency;
  * Created by Walberth Gutierrez Telles on 06,June,2018
  */
 public class StadisticFragment extends Fragment {
-    private PieChart pieChart;
     private DatabaseReference databaseReference;
+    private ArrayList<PieEntry> pieEntries;
+    private RecyclerView stadisticsRecyclerView;
+    private StadisticAdapter stadisticAdapter;
 
     public StadisticFragment() {
         // Required empty public constructor
@@ -52,21 +57,16 @@ public class StadisticFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        Objects.requireNonNull(getActivity()).setTitle(getResources().getString(R.string.nav_item_ranking));
         databaseReference = FirebaseDatabase.getInstance().getReference();
-        getActivity().setTitle(getResources().getString(R.string.nav_item_ranking));
-        pieChart = view.findViewById(R.id.pieChart);
-        pieChart.setUsePercentValues(true);
-        pieChart.getDescription().setEnabled(true);
-        pieChart.setExtraOffsets(5, 10, 5, 5);
-        pieChart.setDragDecelerationFrictionCoef(0.95f);
-        pieChart.setDrawHoleEnabled(false);
-        pieChart.setHoleColor(Color.WHITE);
-        pieChart.setTransparentCircleRadius(61f);
+        pieEntries = new ArrayList<>();
+        stadisticsRecyclerView = view.findViewById(R.id.stadisticsRecyclerView);
+        stadisticsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        final ArrayList<PieEntry> pieEntries = new ArrayList<>();
+        setRecyclerView();
 
-
-        /*databaseReference.child("eventSearch").addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.child("eventSearch").addListenerForSingleValueEvent(new ValueEventListener() {
               @Override
               public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                   Set<String> totalGroups = new HashSet<>();
@@ -80,35 +80,24 @@ public class StadisticFragment extends Fragment {
                   }
 
                   for(String names : totalGroups) {
-                      pieEntries.add(new PieEntry((float)Collections.frequency(totalEvents, names), names));
+                      pieEntries.add(new PieEntry(Collections.frequency(totalEvents, names), names));
                   }
 
+                  stadisticAdapter.notifyDataSetChanged();
               }
 
               @Override
               public void onCancelled(@NonNull DatabaseError databaseError) {
 
               }
-        });*/
+        });
 
 
-        pieEntries.add(new PieEntry(34f, "Salsa"));
-        pieEntries.add(new PieEntry(23f, "Electro"));
-        pieEntries.add(new PieEntry(14f, "Rock"));/*
-        pieEntries.add(new PieEntry(35, "Perreo"));
-        pieEntries.add(new PieEntry(40, "Cumbia"));
-        pieEntries.add(new PieEntry(23, "Chicha"));*/
+    }
 
-        PieDataSet dataSet = new PieDataSet(pieEntries, "Preferencia Musical");
-
-        dataSet.setSliceSpace(3f);
-        dataSet.setSelectionShift(5f);
-        dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
-
-        PieData data = new PieData(dataSet);
-        data.setValueTextSize(10f);
-        data.setValueTextColor(Color.YELLOW);
-
-        pieChart.setData(data);
+    public void setRecyclerView(){
+        stadisticAdapter = new StadisticAdapter(stadisticsRecyclerView, pieEntries, getContext());
+        stadisticsRecyclerView.setHasFixedSize(true);
+        stadisticsRecyclerView.setAdapter(stadisticAdapter);
     }
 }
