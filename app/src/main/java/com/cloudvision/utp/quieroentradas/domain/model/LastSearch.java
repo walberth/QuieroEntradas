@@ -7,14 +7,26 @@ public class LastSearch {
     private String pictureSearched;
     private String groupName;
     private String dateTimeSearched;
+    private String imageStorageName;
+    private String keyUserImageSearch;
 
     public LastSearch() {
     }
 
-    public LastSearch(String pictureSearched, String groupName, String dateTimeSearched) {
+    public LastSearch(String keyUserImageSearch, String imageStorageName, String pictureSearched, String groupName, String dateTimeSearched) {
         this.pictureSearched = pictureSearched;
         this.groupName = groupName;
         this.dateTimeSearched = dateTimeSearched;
+        this.imageStorageName = imageStorageName;
+        this.keyUserImageSearch = keyUserImageSearch;
+    }
+
+    public String getKeyUserImageSearch() {
+        return keyUserImageSearch;
+    }
+
+    public void setKeyUserImageSearch(String keyUserImageSearch) {
+        this.keyUserImageSearch = keyUserImageSearch;
     }
 
     public String getPictureSearched() {
@@ -23,6 +35,14 @@ public class LastSearch {
 
     public void setPictureSearched(String pictureSearched) {
         this.pictureSearched = pictureSearched;
+    }
+
+    public String getImageStorageName() {
+        return imageStorageName;
+    }
+
+    public void setImageStorageName(String imageStorageName) {
+        this.imageStorageName = imageStorageName;
     }
 
     public String getGroupName() {

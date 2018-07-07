@@ -75,8 +75,6 @@ public class LastSearchFragment extends Fragment {
     private List<LastSearch> lastSearchList;
     private RecyclerView recyclerLastSearch;
     private LastSearchAdapter lastSearchAdapter;
-    private DatabaseReference mFirebaseDatabase;
-    private FirebaseDatabase mFirebaseInstance;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -209,13 +207,6 @@ public class LastSearchFragment extends Fragment {
         boolean success = false;
 
         try {
-            UserSearch firebaseUserSearch = new UserSearch(
-                    user.getUid(),
-                    downloadUrl.toString(),
-                    new Date().getTime(),
-                    ""
-            );
-
             String imageNameFirebase = imageName.replace(".png", "");
 
             keyUserImageSearch = FirebaseDatabase
@@ -224,6 +215,15 @@ public class LastSearchFragment extends Fragment {
                                         .child("userSearch")
                                         .push()
                                         .getKey();
+
+            UserSearch firebaseUserSearch = new UserSearch(
+                    keyUserImageSearch,
+                    imageNameFirebase,
+                    user.getUid(),
+                    downloadUrl.toString(),
+                    new Date().getTime(),
+                    ""
+            );
 
             FirebaseDatabase.getInstance()
                     .getReference()
@@ -243,7 +243,7 @@ public class LastSearchFragment extends Fragment {
         try {
             Bundle args  = new Bundle();
             args.putParcelable("picture", bitmapPicture);
-            args.putString("keyUserImageSearch", keyUserImageSearch);;
+            args.putString("keyUserImageSearch", keyUserImageSearch);
 
             android.support.v4.app.FragmentManager fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -265,8 +265,8 @@ public class LastSearchFragment extends Fragment {
     }
 
     public void getLastSearchItems() {
-        mFirebaseInstance = FirebaseDatabase.getInstance();
-        mFirebaseDatabase = mFirebaseInstance.getReference();
+        FirebaseDatabase mFirebaseInstance = FirebaseDatabase.getInstance();
+        DatabaseReference mFirebaseDatabase = mFirebaseInstance.getReference();
 
         try {
             mFirebaseDatabase.child("userSearch").orderByChild("idUser").addChildEventListener(new ChildEventListener() {
@@ -283,6 +283,8 @@ public class LastSearchFragment extends Fragment {
                         search.setGroupName(Objects.requireNonNull(lastSearch).getGroupName());
                         search.setDateTimeSearched(Long.toString(lastSearch.getDateTimeSearch()));
                         search.setPictureSearched(lastSearch.getPicture());
+                        search.setImageStorageName(lastSearch.getImageStorageName());
+                        search.setKeyUserImageSearch(lastSearch.getUid());
 
                         lastSearchList.add(search);
                         lastSearchAdapter.notifyDataSetChanged();
