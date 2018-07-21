@@ -1,5 +1,8 @@
 package com.cloudvision.utp.quieroentradas.presentation.ui.fragment;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,17 +27,32 @@ import com.cloudvision.utp.quieroentradas.domain.model.CloudVisionElement;
 import com.cloudvision.utp.quieroentradas.domain.model.EventsFound;
 import com.cloudvision.utp.quieroentradas.data.model.Place;
 import com.cloudvision.utp.quieroentradas.presentation.adapter.EventsFoundAdapter;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
 import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import java.text.Normalizer;
 import java.util.ArrayList;
@@ -58,6 +76,8 @@ public class EventsFoundFragment extends Fragment {
     private ProgressBar progressBarEventsFound;
     private String keyUserImageSearch;
     private List<CloudVisionElement> cloudVisionElementList;
+    private StorageReference storageReference;
+    private String eventImageUrl;
 
     public interface VolleyCallback{
         void onSuccessResponse(String result);

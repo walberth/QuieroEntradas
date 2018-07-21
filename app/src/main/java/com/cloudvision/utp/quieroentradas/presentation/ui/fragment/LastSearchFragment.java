@@ -167,6 +167,7 @@ public class LastSearchFragment extends Fragment {
 
         try {
             Uri file = Uri.fromFile(new File(imagePath));
+
             final StorageReference riversRef = storageReference.child("images/"+file.getLastPathSegment());
             UploadTask uploadTask = riversRef.putFile(file);
 
