@@ -1,5 +1,8 @@
 package com.cloudvision.utp.quieroentradas.presentation.ui.fragment;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,15 +27,30 @@ import com.cloudvision.utp.quieroentradas.domain.model.CloudVisionElement;
 import com.cloudvision.utp.quieroentradas.domain.model.EventsFound;
 import com.cloudvision.utp.quieroentradas.data.model.Place;
 import com.cloudvision.utp.quieroentradas.presentation.adapter.EventsFoundAdapter;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -54,6 +72,8 @@ public class EventsFoundFragment extends Fragment {
     private ProgressBar progressBarEventsFound;
     private String keyUserImageSearch;
     private List<CloudVisionElement> cloudVisionElementList;
+    private StorageReference storageReference;
+    private String eventImageUrl;
 
     public interface VolleyCallback{
         void onSuccessResponse(String result);
@@ -83,6 +103,8 @@ public class EventsFoundFragment extends Fragment {
         recyclerEventsFound = view.findViewById(R.id.recyclerEventsFound);
         cloudVisionElementList = new ArrayList<>();
         recyclerEventsFound.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        storageReference = FirebaseStorage.getInstance().getReference();
 
         wsSongClickCallback();
     }
@@ -144,12 +166,14 @@ public class EventsFoundFragment extends Fragment {
                                 //-----------------------------------EventSearch
                                 final String idEvent = FirebaseDatabase.getInstance().getReference().child("eventSearch").push().getKey();
 
+                                String eventPicture = getImageEventFromUri(childObject.optString("uri"), idEvent);
+
                                 EventSearch eventSearch = new EventSearch();
                                 eventSearch.setIdUser(user.getUid());
                                 eventSearch.setDateTimeSearch(new Date().getTime());
                                 eventSearch.setEventName(childObject.optString("displayName"));
                                 eventSearch.setEventDate(childObject.optJSONObject("start").optString("date"));
-                                eventSearch.setEventPicture("picture here");
+                                eventSearch.setEventPicture(eventImageUrl);
                                 eventSearch.setEventDescription(childObject.optString("displayName"));
                                 eventSearch.setGroupName(groupName);
                                 eventSearch.setUid(idEvent);
@@ -182,7 +206,7 @@ public class EventsFoundFragment extends Fragment {
                                 eventsFound.setEventId(idEvent);
                                 eventsFound.setEventSongClickId(childObject.optString("id"));
                                 eventsFound.setEventLocationId(childObject.optJSONObject("venue").optString("id"));
-                                eventsFound.setEventPicture("PICTURE SOMEWHERE");
+                                eventsFound.setEventPicture(eventImageUrl);
                                 eventsFound.setLatitud(childObject.optJSONObject("venue").optString("lat"));
                                 eventsFound.setLongitud(childObject.optJSONObject("venue").optString("lng"));
                                 eventsFound.setEventGroup(groupName);
@@ -276,5 +300,110 @@ public class EventsFoundFragment extends Fragment {
                     }
                 });
         VolleyController.getInstance(getActivity()).addToRequestQueue(request);
+    }
+
+    private String getImageEventFromUri(final String uri, final String idEvent){
+        final String MAINURL = "https://images.sk-static.com", WEBURL = "//images.sk-static.com";
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String eventUri = null;
+                try {
+                    Document doc = Jsoup.connect(uri).get();
+                    //String title = doc.title();
+                    Elements posters = doc.getElementsByAttributeValue("data-analytics-label", "poster").select("img[src].media-img");
+                    if (posters.size() > 0) {
+                        eventUri = posters.get(0).attr("src");
+                        if(!eventUri.contains(MAINURL)){
+                            eventUri = eventUri.replace(WEBURL, MAINURL);
+                        }
+                    }
+                    if(eventUri == null){
+                        Elements main = doc.getElementsByClass("profile-picture event");
+                        if (main.size() > 0) {
+                            eventUri = main.get(0).attr("src");
+                            if(!eventUri.contains(MAINURL)){
+                                eventUri = eventUri.replace(WEBURL, MAINURL);
+                            }
+                        }
+                    }
+                    if(eventUri == null){
+                        Elements photos = doc.getElementsByAttributeValue("data-analytics-label", "photo").select("img[src].media-img");
+                        if (photos.size() > 0) {
+                            eventUri = photos.get(0).attr("src");
+                            if(!eventUri.contains(MAINURL)){
+                                eventUri = eventUri.replace(WEBURL, MAINURL);
+                            }
+                        }
+                    }
+                } catch (IOException e) {
+                    Log.e(TAG, "onResponse: web scraping throw " + e.getMessage());
+                }
+                if(eventUri != null) {
+                    InputStream bitmap = getBitmapFromURL(eventUri);
+                    boolean resultPut = uploadFireabsePicture(bitmap, idEvent);
+                }
+
+
+                /*runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        result.setText(builder.toString());
+                    }
+                });*/
+            }
+        }).start();
+
+
+        return null;
+    }
+
+    private static InputStream getBitmapFromURL(String src) {
+        try {
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            //Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return input;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public boolean uploadFireabsePicture (InputStream bitmap, String idEvent) {
+        boolean success = false;
+
+        try {
+
+            final StorageReference riversRef = storageReference.child(new StringBuilder("events/").append(idEvent).append(".jpg").toString());
+            UploadTask uploadTask = riversRef.putStream(bitmap);
+
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    Log.e("filePath", "Upload Failed -> " + exception);
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    riversRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            eventImageUrl = uri.toString();
+                            //Toast.makeText(getActivity(), "Image saved event image", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            });
+
+            success = true;
+        }catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return success;
     }
 }
