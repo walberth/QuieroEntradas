@@ -17,11 +17,13 @@ public class EventsFound implements Parcelable {
     private String longitud;
     private String eventGroup;
     private String userSearchKey;
+    private String eventPlaceDescription;
+    private String eventDescription;
 
     public EventsFound() {
     }
 
-    public EventsFound(String userSearchKey, String eventGroup, String latitud, String longitud, String eventId, String eventSongClickId, String eventLocationId, String eventName, String eventLocation, String eventPicture) {
+    public EventsFound(String userSearchKey, String eventGroup, String latitud, String longitud, String eventId, String eventSongClickId, String eventLocationId, String eventName, String eventLocation, String eventPicture, String eventPlaceDescription, String eventDescription) {
         this.userSearchKey = userSearchKey;
         this.eventName = eventName;
         this.eventLocation = eventLocation;
@@ -32,6 +34,8 @@ public class EventsFound implements Parcelable {
         this.latitud = latitud;
         this.longitud = longitud;
         this.eventGroup = eventGroup;
+        this.eventPlaceDescription = eventPlaceDescription;
+        this.eventDescription = eventDescription;
     }
 
     protected EventsFound(Parcel in) {
@@ -51,6 +55,22 @@ public class EventsFound implements Parcelable {
             return new EventsFound[size];
         }
     };
+
+    public String getEventPlaceDescription() {
+        return eventPlaceDescription;
+    }
+
+    public void setEventPlaceDescription(String eventPlaceDescription) {
+        this.eventPlaceDescription = eventPlaceDescription;
+    }
+
+    public String getEventDescription() {
+        return eventDescription;
+    }
+
+    public void setEventDescription(String eventDescription) {
+        this.eventDescription = eventDescription;
+    }
 
     public String getUserSearchKey() {
         return userSearchKey;

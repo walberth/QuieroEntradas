@@ -41,9 +41,13 @@ import com.google.firebase.storage.UploadTask;
 
 import com.google.gson.JsonObject;
 
+import com.google.gson.JsonObject;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.text.Normalizer;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
